@@ -122,7 +122,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TSKS Examiner\Rhema.vbproj">
+    <ProjectReference Include="..\Rhema\Rhema.vbproj">
       <Project>{273c896f-b456-479d-ab31-00274d3bb845}</Project>
       <Name>Rhema</Name>
     </ProjectReference>
