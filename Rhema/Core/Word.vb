@@ -20,13 +20,20 @@ Public Class word
     Public Chapter As Integer
     Public Verse As Integer
 
+    Public Sub New()
+
+    End Sub
+
     Public Sub New(ByVal text As String, ByVal strongs() As String, ByVal parsing As String)
         _Text = text
         _Strongs = strongs
         Dim i As Integer
-        For i = 0 To _Strongs.Length - 1
-            StrongsNumber &= _Strongs(i)
-        Next
+        If Not IsNothing(_Strongs) Then
+            For i = 0 To _Strongs.Length - 1
+                StrongsNumber &= _Strongs(i)
+            Next
+        End If
+
         If parsing = "N-PRI" Or _Text.Contains("ιησου") Or _Text.Contains("χριστ") Then
             _Type = "Proper Name"
             _Indeclinable = True

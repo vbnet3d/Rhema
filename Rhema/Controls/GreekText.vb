@@ -1,6 +1,4 @@
-﻿
-
-Public Class GreekText
+﻿Public Class GreekText
     Inherits TextBox
 
     Private ld As New Dictionary(Of Char, Char)

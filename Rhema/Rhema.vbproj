@@ -103,6 +103,9 @@
     <Compile Include="Core\Bible.vb" />
     <Compile Include="Core\Data.vb" />
     <Compile Include="Core\Extensions.vb" />
+    <Compile Include="Core\FullTextBible.vb" />
+    <Compile Include="Core\Lexicon.vb" />
+    <Compile Include="Core\Search.vb" />
     <Compile Include="Forms\frmMain.vb">
       <SubType>Form</SubType>
     </Compile>

@@ -7,11 +7,7 @@ Imports Rhema
     Dim strongs As Lexicon
     Dim fb As FullTextBible
 
-    Public Sub New()
-        tr = New Bible("Textus Receptus", ".\greek_textus_receptus_parsed_utf8.txt")
-        strongs = Import.Lexicon(".\strongs.csv")
-        fb = tr.ToFullText
-    End Sub
+
 
     <TestMethod()> Public Sub TestWithinSearches()
         Assert.AreEqual(tr.GetReference(fb.Search("αλλος <WITHIN 25 WORDS> αυτου").ToArray).Count, 16)

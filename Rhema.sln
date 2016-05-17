@@ -5,11 +5,6 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Rhema", "Rhema\Rhema.vbproj", "{273C896F-B456-479D-AB31-00274D3BB845}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RhemaTests", "RhemaTests\RhemaTests.vbproj", "{EC07D8B1-7168-465E-B1A4-8719A0608307}"
-	ProjectSection(ProjectDependencies) = postProject
-		{273C896F-B456-479D-AB31-00274D3BB845} = {273C896F-B456-479D-AB31-00274D3BB845}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,14 +19,6 @@ Global
 		{273C896F-B456-479D-AB31-00274D3BB845}.Release|Any CPU.ActiveCfg = Release|x86
 		{273C896F-B456-479D-AB31-00274D3BB845}.Release|x86.ActiveCfg = Release|x86
 		{273C896F-B456-479D-AB31-00274D3BB845}.Release|x86.Build.0 = Release|x86
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Debug|x86.Build.0 = Debug|Any CPU
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Release|x86.ActiveCfg = Release|Any CPU
-		{EC07D8B1-7168-465E-B1A4-8719A0608307}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

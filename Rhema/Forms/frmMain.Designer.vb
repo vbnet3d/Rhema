@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmMain
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmMain
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.txt = New System.Windows.Forms.TextBox()
         Me.cmbBook = New System.Windows.Forms.ComboBox()
@@ -29,7 +29,6 @@ Partial Class frmMain
         Me.Button1 = New System.Windows.Forms.Button()
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.lblResults = New System.Windows.Forms.Label()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.GreekText1 = New Rhema.GreekText()
         Me.SuspendLayout()
         '
@@ -94,17 +93,6 @@ Partial Class frmMain
         Me.lblResults.Size = New System.Drawing.Size(0, 13)
         Me.lblResults.TabIndex = 10
         '
-        'ListBox1
-        '
-        Me.ListBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(3, 295)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(668, 121)
-        Me.ListBox1.TabIndex = 11
-        '
         'GreekText1
         '
         Me.GreekText1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -113,13 +101,12 @@ Partial Class frmMain
         Me.GreekText1.Size = New System.Drawing.Size(346, 26)
         Me.GreekText1.TabIndex = 6
         '
-        'Form1
+        'frmMain
         '
         Me.AcceptButton = Me.Button1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(683, 434)
-        Me.Controls.Add(Me.ListBox1)
+        Me.ClientSize = New System.Drawing.Size(683, 289)
         Me.Controls.Add(Me.lblResults)
         Me.Controls.Add(Me.txtSearch)
         Me.Controls.Add(Me.Button1)
@@ -128,7 +115,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.cmbChap)
         Me.Controls.Add(Me.cmbBook)
         Me.Controls.Add(Me.txt)
-        Me.Name = "Form1"
+        Me.Name = "frmMain"
         Me.Text = "GNT Explorer"
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -142,5 +129,4 @@ Partial Class frmMain
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents lblResults As System.Windows.Forms.Label
-    Friend WithEvents ListBox1 As ListBox
 End Class
