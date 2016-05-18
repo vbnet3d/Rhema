@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("TSKS Examiner")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("TSKS Examiner")> 
-<Assembly: AssemblyCopyright("Copyright ©  2013")> 
+<Assembly: AssemblyTitle("Rhema")>
+<Assembly: AssemblyDescription("Rhema Bible Syntax Search Tool")>
+<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyProduct("Rhema")>
+<Assembly: AssemblyCopyright("Copyright ©  2016 David Dzimianski")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("621db9c0-89d6-43cc-8e5b-83fada1eb406")> 
+<Assembly: Guid("621db9c0-89d6-43cc-8e5b-83fada1eb406")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.0.0.*")>
 <Assembly: AssemblyFileVersion("1.0.0.0")> 
