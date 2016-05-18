@@ -8,9 +8,8 @@ Rhema is a .NET based Greek/Hebrew language syntax search tool designed to be us
 
 Syntax search using WITHIN command: 
 
-    αυτος <WITHIN 5 WORDS> ανθρωπος
-    
-    αυτος <WITHIN 5 WORDS> ανθρωπος <OR> αυτου <WITHIN 5 WORDS> ανθρωπος
+ - `αυτος <WITHIN 5 WORDS> ανθρωπος`
+ - `αυτος <WITHIN 5 WORDS> ανθρωπος <OR> αυτου <WITHIN 5 WORDS> ανθρωπος`
 
 # Search Syntax (Work in Progress)
 
