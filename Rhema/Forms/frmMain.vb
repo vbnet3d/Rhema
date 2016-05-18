@@ -60,18 +60,23 @@ Public Class frmMain
             End If
         Next
 
-        Dim d As New IO.DirectoryInfo(".\bibles")
-        Dim files As IO.FileInfo() = d.GetFiles
-        For Each f As IO.FileInfo In files
-            If f.Extension.Contains("bible") Then
-                If Not cmbBible.Items.Contains(f.Name.Replace(".bible", "")) Then
-                    Dim fb As FullTextBible = BibleData.Load(f.FullName)
-                    Bibles.Add(fb.ToBible)
-                    ftBibles.Add(fb)
-                    cmbBible.Items.Add(fb.Name)
+        Try
+            Dim d As New IO.DirectoryInfo(".\bibles")
+            Dim files As IO.FileInfo() = d.GetFiles
+            For Each f As IO.FileInfo In files
+                If f.Extension.Contains("bible") Then
+                    If Not cmbBible.Items.Contains(f.Name.Replace(".bible", "")) Then
+                        Dim fb As FullTextBible = BibleData.Load(f.FullName)
+                        Bibles.Add(fb.ToBible)
+                        ftBibles.Add(fb)
+                        cmbBible.Items.Add(fb.Name)
+                    End If
                 End If
-            End If
-        Next
+            Next
+        Catch ex As Exception
+            Debug.Print(ex.Message)
+        End Try
+
 
         curBible = Bibles.Last
         curFtBible = ftBibles.Last
