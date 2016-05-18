@@ -112,6 +112,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Core\Bible.vb" />
+    <Compile Include="Core\Compiler.vb" />
     <Compile Include="Core\Core.vb" />
     <Compile Include="Core\Data.vb" />
     <Compile Include="Core\Extensions.vb" />

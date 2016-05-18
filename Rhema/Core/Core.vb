@@ -1,6 +1,4 @@
-﻿Option Explicit On
-Option Strict On
-'The MIT License (MIT)
+﻿'The MIT License (MIT)
 
 'Copyright(c) 2016 David Dzimianski
 
@@ -21,6 +19,9 @@ Option Strict On
 'LIABILITY, WHETHER In AN ACTION Of CONTRACT, TORT Or OTHERWISE, ARISING FROM,
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
+
+Option Explicit On
+Option Strict On
 
 Imports System.IO
 Imports System.Reflection
