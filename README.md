@@ -6,4 +6,6 @@ Rhema is a .NET based Greek/Hebrew language syntax search tool designed to be us
 
 # Examples
 
-Syntax search using WITHIN command: 'αυτος <WITHIN 5 WORDS> ανθρωπος'
+Syntax search using WITHIN command: 
+
+    αυτος <WITHIN 5 WORDS> ανθρωπος
