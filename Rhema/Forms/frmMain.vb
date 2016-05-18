@@ -25,38 +25,43 @@ Option Strict On
 
 Public Class frmMain
     Dim curBible As Bible
+    Dim curFtBible As FullTextBible
+    Dim ftBibles As New List(Of FullTextBible)
+    Dim Bibles As New List(Of Bible)
     Dim b As Book
     Dim c As Chapter
-    Dim fb As FullTextBible
+
     Dim ac As AutoCompleteStringCollection
 
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
-        Me.Text = "Loading data..."
         createBible()
     End Sub
 
     Private Sub createBible()
-        'curBible = New Bible("LXX", ".\lxx_a_parsing_unaccented_utf8.txt")
-        ' ConvertUnboundToRhema(".\lxx_a_parsing_unaccented_utf8.txt", ".\bibles\LXX.txt", ".\book_names.txt")
-        'tr = New Bible("Textus Receptus", ".\greek_textus_receptus_parsed_utf8.txt")
-        'tr.Merge(lxx)
-        'BibleData.Save(tr)
-        ConvertUnboundToRhema(".\greek_textus_receptus_parsed_utf8.txt", ".\bibles\TR.txt", ".\book_names.txt")
-        'cmbBook.Items.AddRange(tr.BookList)
-
-        Me.Text = "Rhema"
-
-        fb = BibleData.Load(".\bibles\LXX.bible")
-
-        ac = New AutoCompleteStringCollection
-        Dim strongs As Lexicon = Import.Lexicon(".\strongs.csv")
-        For Each e As LexicalEntry In strongs.Entry.Values
-            ac.Add(e.simpleform)
+        Dim d As New IO.DirectoryInfo(".\bibles")
+        Dim files As IO.FileInfo() = d.GetFiles
+        For Each f As IO.FileInfo In files
+            If f.Extension.Contains("bible") Then
+                Dim fb As FullTextBible = BibleData.Load(f.FullName)
+                Bibles.Add(fb.ToBible)
+                ftBibles.Add(fb)
+                cmbBible.Items.Add(fb.Name)
+            End If
         Next
-        Me.GreekText1.AutoCompleteCustomSource = ac
-        Me.GreekText1.AutoCompleteMode = AutoCompleteMode.SuggestAppend
-        Me.GreekText1.AutoCompleteSource = AutoCompleteSource.CustomSource
+
+        curBible = Bibles.Last
+        curFtBible = ftBibles.Last
+        cmbBible.Text = curBible.Name
+
+        'ac = New AutoCompleteStringCollection
+        'Dim strongs As Lexicon = Import.Lexicon(".\strongs.csv")
+        'For Each e As LexicalEntry In strongs.Entry.Values
+        '    ac.Add(e.simpleform)
+        'Next
+        'Me.GreekText1.AutoCompleteCustomSource = ac
+        'Me.GreekText1.AutoCompleteMode = AutoCompleteMode.SuggestAppend
+        'Me.GreekText1.AutoCompleteSource = AutoCompleteSource.CustomSource
     End Sub
 
     Private Sub cmbBook_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbBook.SelectedIndexChanged
@@ -84,12 +89,21 @@ Public Class frmMain
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         Dim search As New System.Text.StringBuilder
         txtSearch.Text = ""
-        Dim l As List(Of Verse) = curBible.GetReference(fb.Search(GreekText1.Text).ToArray)
+        Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text).ToArray)
         Dim i As Integer
         For i = 0 To l.Count - 1
             search.Append(l(i).Book & " " & (l(i).Chapter + 1) & ":" & (l(i).Verse) & " " & l(i).RawText & vbCrLf)
         Next
         txtSearch.Text = search.ToString
         lblResults.Text = l.Count & " Result(s)"
+    End Sub
+
+    Private Sub cmbBible_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbBible.SelectedIndexChanged
+        For i As Integer = 0 To ftBibles.Count - 1
+            If ftBibles(i).Name = cmbBible.Text Then
+                curFtBible = ftBibles(i)
+                curBible = Bibles(i)
+            End If
+        Next
     End Sub
 End Class

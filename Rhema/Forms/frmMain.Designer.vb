@@ -30,21 +30,24 @@ Partial Class frmMain
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.lblResults = New System.Windows.Forms.Label()
         Me.GreekText1 = New Rhema.GreekText()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.cmbBible = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'txt
         '
         Me.txt.Font = New System.Drawing.Font("Times New Roman", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txt.Location = New System.Drawing.Point(3, 30)
+        Me.txt.Location = New System.Drawing.Point(3, 86)
         Me.txt.Multiline = True
         Me.txt.Name = "txt"
-        Me.txt.Size = New System.Drawing.Size(232, 250)
+        Me.txt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txt.Size = New System.Drawing.Size(232, 254)
         Me.txt.TabIndex = 0
         '
         'cmbBook
         '
         Me.cmbBook.FormattingEnabled = True
-        Me.cmbBook.Location = New System.Drawing.Point(3, 3)
+        Me.cmbBook.Location = New System.Drawing.Point(3, 53)
         Me.cmbBook.Name = "cmbBook"
         Me.cmbBook.Size = New System.Drawing.Size(121, 21)
         Me.cmbBook.TabIndex = 1
@@ -52,7 +55,7 @@ Partial Class frmMain
         'cmbChap
         '
         Me.cmbChap.FormattingEnabled = True
-        Me.cmbChap.Location = New System.Drawing.Point(130, 3)
+        Me.cmbChap.Location = New System.Drawing.Point(130, 53)
         Me.cmbChap.Name = "cmbChap"
         Me.cmbChap.Size = New System.Drawing.Size(53, 21)
         Me.cmbChap.TabIndex = 2
@@ -60,7 +63,7 @@ Partial Class frmMain
         'cmbVerse
         '
         Me.cmbVerse.FormattingEnabled = True
-        Me.cmbVerse.Location = New System.Drawing.Point(189, 3)
+        Me.cmbVerse.Location = New System.Drawing.Point(189, 53)
         Me.cmbVerse.Name = "cmbVerse"
         Me.cmbVerse.Size = New System.Drawing.Size(46, 21)
         Me.cmbVerse.TabIndex = 3
@@ -82,7 +85,8 @@ Partial Class frmMain
         Me.txtSearch.Location = New System.Drawing.Point(244, 52)
         Me.txtSearch.Multiline = True
         Me.txtSearch.Name = "txtSearch"
-        Me.txtSearch.Size = New System.Drawing.Size(427, 228)
+        Me.txtSearch.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtSearch.Size = New System.Drawing.Size(427, 288)
         Me.txtSearch.TabIndex = 8
         '
         'lblResults
@@ -101,12 +105,31 @@ Partial Class frmMain
         Me.GreekText1.Size = New System.Drawing.Size(346, 26)
         Me.GreekText1.TabIndex = 6
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(4, 11)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(33, 13)
+        Me.Label1.TabIndex = 11
+        Me.Label1.Text = "Bible:"
+        '
+        'cmbBible
+        '
+        Me.cmbBible.FormattingEnabled = True
+        Me.cmbBible.Location = New System.Drawing.Point(43, 6)
+        Me.cmbBible.Name = "cmbBible"
+        Me.cmbBible.Size = New System.Drawing.Size(192, 21)
+        Me.cmbBible.TabIndex = 12
+        '
         'frmMain
         '
         Me.AcceptButton = Me.Button1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(683, 289)
+        Me.ClientSize = New System.Drawing.Size(683, 352)
+        Me.Controls.Add(Me.cmbBible)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lblResults)
         Me.Controls.Add(Me.txtSearch)
         Me.Controls.Add(Me.Button1)
@@ -116,7 +139,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.cmbBook)
         Me.Controls.Add(Me.txt)
         Me.Name = "frmMain"
-        Me.Text = "GNT Explorer"
+        Me.Text = "Rhema"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -129,4 +152,6 @@ Partial Class frmMain
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents lblResults As System.Windows.Forms.Label
+    Friend WithEvents Label1 As Label
+    Friend WithEvents cmbBible As ComboBox
 End Class
