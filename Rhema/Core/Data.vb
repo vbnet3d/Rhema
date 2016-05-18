@@ -131,7 +131,7 @@ Public Module BibleData
     End Sub
 
     Private Sub Parse(Parsing As String, ByVal entry As EntryData)
-        If Parsing.Contains("-") Then
+        If entry.Strongs = "" Then
             Parsing = Parsing.Replace("--", "-")
             Dim parts() As String = Parsing.Split(CType("-", Char()))
 
@@ -146,11 +146,11 @@ Public Module BibleData
             ElseIf parts(1).StartsWith("RA") Then
                 entry.Part = "Article"
             ElseIf parts(1).StartsWith("RD") Then
-                entry.Part = "Pronoun"
+                entry.Part = "Demonstrative Pronount"
             ElseIf parts(1).StartsWith("RI") Then
                 entry.Part = "Indefinite Pronoun"
             ElseIf parts(1).StartsWith("RP") Then
-                entry.Part = "Pronoun"
+                entry.Part = "Personal Pronoun"
             ElseIf parts(1).StartsWith("RR") Then
                 entry.Part = "Relative Pronoun"
             ElseIf parts(1).StartsWith("V") Then
@@ -174,13 +174,13 @@ Public Module BibleData
             ElseIf parts(1) = "C" Then
                 entry.Part = "Conjunction"
             ElseIf parts(1) = "D" Then
-                entry.Part = "Time"
+                entry.Part = "Adverb"
             ElseIf parts(1) = "I" Then
-                entry.Part = "Demonstrative"
+                entry.Part = "Interjection"
             ElseIf parts(1) = "M" Then
-                entry.Part = "Number"
+                entry.Part = "Indeclinable Number"
             ElseIf parts(1) = "X" Then
-                entry.Part = "Disjunction"
+                entry.Part = "Particle"
             ElseIf parts(1).StartsWith("A") Then
                 entry.Part = "Adjective"
             End If
