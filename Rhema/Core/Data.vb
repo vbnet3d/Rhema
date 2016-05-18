@@ -30,10 +30,9 @@ Public Module BibleData
     Dim VarRegex As New Regex("{.*}", RegexOptions.Compiled)
     Dim separator As Char = ControlChars.Tab
 
-    Public Function Load(filename As String) As FullTextBible
+    Private Function Load(contents() As String, name As String) As FullTextBible
         Dim b As New FullTextBible
-        b.Name = IO.Path.GetFileNameWithoutExtension(filename)
-        Dim contents() As String = IO.File.ReadAllLines(filename)
+        b.Name = name
 
         For Each s As String In contents
             Dim w As New word
@@ -58,8 +57,20 @@ Public Module BibleData
             End If
         Next
 
-
         Return b
+    End Function
+
+    Public Function Load(s As IO.StreamReader, name As String) As FullTextBible
+        Dim contents As New List(Of String)
+        While Not s.Peek = -1
+            contents.Add(s.ReadLine)
+        End While
+        Return Load(contents.ToArray, name)
+    End Function
+
+    Public Function Load(filename As String) As FullTextBible
+        Dim contents() As String = IO.File.ReadAllLines(filename)
+        Return Load(contents, IO.Path.GetFileNameWithoutExtension(filename))
     End Function
 
     Public Sub ConvertUnboundToRhema(inputfilename As String, outputfilename As String, Optional CodeToNameFile As String = Nothing)

@@ -23,36 +23,60 @@
 Option Explicit On
 Option Strict On
 
+Imports System.IO
+Imports System.Reflection
+
 Public Class frmMain
     Dim curBible As Bible
     Dim curFtBible As FullTextBible
     Dim ftBibles As New List(Of FullTextBible)
+    Dim Lexicon As Lexicon
     Dim Bibles As New List(Of Bible)
     Dim b As Book
     Dim c As Chapter
+
+    Dim _assembly As [Assembly]
 
     Dim ac As AutoCompleteStringCollection
 
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
+        _assembly = [Assembly].GetExecutingAssembly()
+
         createBible()
     End Sub
 
     Private Sub createBible()
+        Dim list() As String = _assembly.GetManifestResourceNames
+        For Each s As String In list
+            If s.Contains("bible") Then
+                Using _s = New StreamReader(_assembly.GetManifestResourceStream(s))
+                    Dim name As String = s.Substring(s.IndexOf(".") + 1, s.LastIndexOf(".") - s.IndexOf(".") - 1)
+                    Dim fb As FullTextBible = BibleData.Load(_s, name)
+                    Bibles.Add(fb.ToBible)
+                    ftBibles.Add(fb)
+                    cmbBible.Items.Add(fb.Name)
+                End Using
+            End If
+        Next
+
         Dim d As New IO.DirectoryInfo(".\bibles")
         Dim files As IO.FileInfo() = d.GetFiles
         For Each f As IO.FileInfo In files
             If f.Extension.Contains("bible") Then
-                Dim fb As FullTextBible = BibleData.Load(f.FullName)
-                Bibles.Add(fb.ToBible)
-                ftBibles.Add(fb)
-                cmbBible.Items.Add(fb.Name)
+                If Not cmbBible.Items.Contains(f.Name.Replace(".bible", "")) Then
+                    Dim fb As FullTextBible = BibleData.Load(f.FullName)
+                    Bibles.Add(fb.ToBible)
+                    ftBibles.Add(fb)
+                    cmbBible.Items.Add(fb.Name)
+                End If
             End If
         Next
 
         curBible = Bibles.Last
         curFtBible = ftBibles.Last
         cmbBible.Text = curBible.Name
+        cmbBook.Items.AddRange(curBible.BookList())
 
         'ac = New AutoCompleteStringCollection
         'Dim strongs As Lexicon = Import.Lexicon(".\strongs.csv")
@@ -82,7 +106,7 @@ Public Class frmMain
     End Sub
 
     Private Sub cmbVerse_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbVerse.SelectedIndexChanged
-        txt.Text = curBible.GetVerseText(cmbBook.Text, cmbChap.SelectedIndex + 1, cmbVerse.SelectedIndex + 1, 5)
+        txt.Text = curBible.GetVerseText(cmbBook.Text, cmbChap.SelectedIndex + 1, cmbVerse.SelectedIndex + 1)
     End Sub
 
 
@@ -103,6 +127,8 @@ Public Class frmMain
             If ftBibles(i).Name = cmbBible.Text Then
                 curFtBible = ftBibles(i)
                 curBible = Bibles(i)
+                cmbBook.Items.Clear()
+                cmbBook.Items.AddRange(curBible.BookList())
             End If
         Next
     End Sub
