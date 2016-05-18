@@ -16,14 +16,12 @@ Public Module RegexConvert
 
     <System.Runtime.CompilerServices.Extension>
     Public Function ToGreekLettersOnly(input As String) As String
-        Dim rgx As New Regex("[^Α-Ωα-ω]", RegexOptions.Compiled)
-        Return rgx.Replace(input, "")
+        Return Parsing.RemoveDiacriticals(input)
     End Function
 
     <System.Runtime.CompilerServices.Extension>
     Public Function ToHebrewLettersOnly(input As String) As String
-        Dim rgx As New Regex("[^א-ת]", RegexOptions.Compiled)
-        Return rgx.Replace(input, "")
+        Return Parsing.RemoveDiacriticals(input)
     End Function
 
     <System.Runtime.CompilerServices.Extension>

@@ -11,12 +11,14 @@ Public Class FullTextBible
     Public Const [AND] As String = "<[Aa][Nn][Dd]>"
     Public Const [XOR] As String = "<[Xx][Oo][Rr]>"
     Public Const [NOT] As String = "<[Nn][Oo][Tt]>"
+    Public Const STRONGS As String = "<[GH][0-9]*>"
 
     Private WithinRegex As New Regex(WITHIN, RegexOptions.Compiled)
     Private OrRegex As New Regex([OR], RegexOptions.Compiled)
     Private AndRegex As New Regex([AND], RegexOptions.Compiled)
     Private XorRegex As New Regex([XOR], RegexOptions.Compiled)
     Private NotRegex As New Regex([NOT], RegexOptions.Compiled)
+    Private StrongsRegex As New Regex(STRONGS, RegexOptions.Compiled)
 
     Public Function ParseCommandBlock(cmd As String) As Condition
         Dim c As New Condition
@@ -89,15 +91,57 @@ Public Class FullTextBible
         '#########################
         'COMMANDS
         '*************************
-        'Begin and end with < and >
+        'Form: x <command_name options> y
+        'Notes: x and y may be WORDS or other conditions.
         '*************************
-        'x <WITHIN int WORDS> y 'Is word x within int words of y, either direction?
-        'x <OR> y  'either x or y may be true
-        'x <AND> y 'x and y must be true
+        'x <WITHIN distance WORDS> y    Is word <x> within <distance> words of <y>, either direction?
+        'x <OR> y                       Either <x> or <y> may be true
+        'x <AND> y                      <x> and <y> must be true
         'x <NOT> y 'x must be true and y false
         'x <XOR> y 'only one of x/y may be true
         'x <FOLLOWED BY int WORDS> y
         'x <PRECEDED BY int WORDS> y
+        '**************************
+        '##########################
+        'PARTS OF SPEECH
+        '**************************
+        'Form: [part_name id(numeric, optional) parsing(optional)]
+        'Notes: Matching ids are used when you want to select different words with the basic parsing
+        '       i.e. A Nom. Masc. Sg. Article and Nom. Masc. Sg. Noun, without specifying exactly what
+        '       forms to return. This allows the user to search for all forms of a syntactic structure.
+        '       Parsing is in the form of G(ender)N(umber)C(ase) for substantives or 
+        '       T(ense)V(oice)M(ood)P(erson)N(umber) for standard Greek verbs. Greek Participle parsing
+        '       Is in the form of T(ense)V(oice)M(ood)G(ender)N(umber)C(ase). Hebrew parsing will be
+        '       added later.
+        'TODO: Add Hebrew parsing
+        'Parsing Options:
+        '   Gender: M(asculine), F(eminine), N(euter)
+        '   Number: S(ingular), P(lural), D(ual)
+        '   Case:   N(ominative), D(ative), G(enitive), A(ccusative), V(ocative)
+        '   Tense:  P(resent), A(orist), X(Perfect), I(mperfect), F(uture), Y(Pluperfect)
+        '   Voice:  A(ctive), M(iddle), P(assive)
+        '   Mood:   I(ndicative), D(Imperative), (I)N(finitive), P(articiple), S(ubjunctive), O(ptative)
+        '   Person: 1, 2, 3
+        '   [Hebrew Specific]
+        '   Stem: Qal, Niphal, Hiphil, Hophal, Hithpael, etc... 
+        '**************************
+        '[ANY id parsing]           Matches any word unit
+        '[ARTICLE id parsing]       Matches any article
+        '[SUBSTANTIVE id parsing]   Matches any substantive word unit
+        '[NOUN id parsing]          Matches any noun
+        '[ANYPRONOUN id parsing]    Matches any pronoun
+        '[PRONOUN id parsing]       Matches only regular pronouns
+        '[REFLEXIVE id parsing]     Matches only reflexive pronouns
+        '[INDEFINITE id parsing]    Matches only indefinite pronouns
+        '[NUMBER id parsing]        Matches only indeclinable numbers
+        '[PARTICLE id parsing]      Matches only particles
+        '[VERB id parsing]          Matches only verbs
+        '**************************
+        '##########################
+        'Strong's Number
+        '**************************
+        'Form: <G123>
+
 
         ' TODO: Change this to loop through all conditions in a group while on a specific word index
         ' And then evaluate the result of all the group conditions together before adding the pieces in.
