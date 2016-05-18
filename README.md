@@ -20,13 +20,13 @@ Form: `x <command_name options> y`
 Notes: x and y may be words or other conditions.
 
 ---
-`x <WITHIN distance WORDS> y` 
-`x <OR> y`  
-`x <AND> y` 
-`x <NOT> y` 
-`x <XOR> y`
-`x <FOLLOWED BY distance WORDS> y`
-`x <PRECEDED BY distance WORDS> y` 
+ - `x <WITHIN distance WORDS> y` 
+ - `x <OR> y`  
+ - `x <AND> y` 
+ - `x <NOT> y` 
+ - `x <XOR> y`
+ - `x <FOLLOWED BY distance WORDS> y`
+ - `x <PRECEDED BY distance WORDS> y` 
 
 ## PARTS OF SPEECH ##
 
