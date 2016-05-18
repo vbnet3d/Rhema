@@ -224,7 +224,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(b).Chapter, Me.Text(b).Verse)
-
+                                    c.Result = True
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -240,7 +240,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(f).Chapter, Me.Text(f).Verse)
-
+                                    c.Result = True
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -257,7 +257,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(b).Chapter, Me.Text(b).Verse)
-
+                                    c.Result = True
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -273,7 +273,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(f).Chapter, Me.Text(f).Verse)
-
+                                    c.Result = True
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -293,6 +293,7 @@ Public Class FullTextBible
                             r.EndChapter = Me.Text(i).Chapter
                             r.EndVerse = Me.Text(i).Verse
                             l.Add(r)
+                            c.Result = True
                         End If
                     End If
                 Next

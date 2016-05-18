@@ -31,6 +31,7 @@ Public Class Condition
     Public X As String
     Public Y As String
     Public Options As New List(Of String)
+    Public Result As Boolean
 End Class
 
 Public Module Parsing
