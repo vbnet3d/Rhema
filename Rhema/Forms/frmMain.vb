@@ -76,7 +76,6 @@ Public Class frmMain
         curBible = Bibles.Last
         curFtBible = ftBibles.Last
         cmbBible.Text = curBible.Name
-        cmbBook.Items.AddRange(curBible.BookList())
 
         'ac = New AutoCompleteStringCollection
         'Dim strongs As Lexicon = Import.Lexicon(".\strongs.csv")
