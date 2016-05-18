@@ -1,4 +1,26 @@
-﻿Option Explicit On
+﻿'The MIT License (MIT)
+
+'Copyright(c) 2016 David Dzimianski
+
+'Permission Is hereby granted, free Of charge, to any person obtaining a copy
+'of this software And associated documentation files (the "Software"), to deal
+'in the Software without restriction, including without limitation the rights
+'to use, copy, modify, merge, publish, distribute, sublicense, And/Or sell
+'copies of the Software, And to permit persons to whom the Software Is
+'furnished to do so, subject to the following conditions:
+
+'The above copyright notice And this permission notice shall be included In all
+'copies Or substantial portions of the Software.
+
+'THE SOFTWARE Is PROVIDED "AS IS", WITHOUT WARRANTY Of ANY KIND, EXPRESS Or
+'IMPLIED, INCLUDING BUT Not LIMITED To THE WARRANTIES Of MERCHANTABILITY,
+'FITNESS FOR A PARTICULAR PURPOSE And NONINFRINGEMENT. IN NO EVENT SHALL THE
+'AUTHORS Or COPYRIGHT HOLDERS BE LIABLE For ANY CLAIM, DAMAGES Or OTHER
+'LIABILITY, WHETHER In AN ACTION Of CONTRACT, TORT Or OTHERWISE, ARISING FROM,
+'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
+'SOFTWARE.
+
+Option Explicit On
 Option Strict On
 
 Imports System.Text.RegularExpressions
@@ -12,12 +34,17 @@ Public Class Book
 End Class
 
 Public Class Chapter
-    Public Verse As New List(Of VerseParser)
+    Public Verse As New List(Of Verse)
 End Class
 
-Public Class VerseParser
-    Public Words As List(Of word)
-    Public RawText As String = ""
+Public Class Verse
+    Public Words As New List(Of word)
+    Public Property Text As New System.Text.StringBuilder
+    Public ReadOnly Property RawText As String
+        Get
+            Return Text.ToString
+        End Get
+    End Property
     Public Book As String
     Public Chapter As Integer
     Public Verse As Integer
@@ -31,35 +58,35 @@ Public Class Bible
         Me.Name = name
     End Sub
 
-    Public Function GetReference(ref() As Reference) As List(Of VerseParser)
-        Dim l As New List(Of VerseParser)
+    Public Function GetReference(ref() As Reference) As List(Of Verse)
+        Dim l As New List(Of Verse)
         For Each r As Reference In ref
             l.AddRange(Me.GetReference(r))
         Next
         Return l
     End Function
 
-    Public Function GetReference(ref As Reference) As VerseParser()
+    Public Function GetReference(ref As Reference) As Verse()
         'Try
-        Dim v As New List(Of VerseParser)
+        Dim v As New List(Of Verse)
 
         Dim b As Book = Me.Books(ref.Book)
         For c As Integer = ref.StartChapter To ref.EndChapter
             If ref.StartChapter = ref.EndChapter Then
-                For Each vs As VerseParser In b.Chapters(c - 1).Verse
+                For Each vs As Verse In b.Chapters(c - 1).Verse
                     If vs.Verse >= ref.StartVerse And vs.Verse <= ref.EndVerse Then
                         v.Add(vs)
                     End If
                 Next
             Else
                 If c = ref.StartChapter Then
-                    For Each vs As VerseParser In b.Chapters(c - 1).Verse
+                    For Each vs As Verse In b.Chapters(c - 1).Verse
                         If vs.Verse >= ref.StartVerse Then
                             v.Add(vs)
                         End If
                     Next
                 Else
-                    For Each vs As VerseParser In b.Chapters(c - 1).Verse
+                    For Each vs As Verse In b.Chapters(c - 1).Verse
                         If vs.Verse <= ref.EndVerse Then
                             v.Add(vs)
                         End If

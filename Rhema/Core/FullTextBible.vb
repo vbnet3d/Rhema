@@ -1,24 +1,92 @@
-﻿Option Explicit On
+﻿'The MIT License (MIT)
+
+'Copyright(c) 2016 David Dzimianski
+
+'Permission Is hereby granted, free Of charge, to any person obtaining a copy
+'of this software And associated documentation files (the "Software"), to deal
+'in the Software without restriction, including without limitation the rights
+'to use, copy, modify, merge, publish, distribute, sublicense, And/Or sell
+'copies of the Software, And to permit persons to whom the Software Is
+'furnished to do so, subject to the following conditions:
+
+'The above copyright notice And this permission notice shall be included In all
+'copies Or substantial portions of the Software.
+
+'THE SOFTWARE Is PROVIDED "AS IS", WITHOUT WARRANTY Of ANY KIND, EXPRESS Or
+'IMPLIED, INCLUDING BUT Not LIMITED To THE WARRANTIES Of MERCHANTABILITY,
+'FITNESS FOR A PARTICULAR PURPOSE And NONINFRINGEMENT. IN NO EVENT SHALL THE
+'AUTHORS Or COPYRIGHT HOLDERS BE LIABLE For ANY CLAIM, DAMAGES Or OTHER
+'LIABILITY, WHETHER In AN ACTION Of CONTRACT, TORT Or OTHERWISE, ARISING FROM,
+'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
+'SOFTWARE.
+
+Option Explicit On
 Option Strict On
 
 Imports System.Text.RegularExpressions
 
 Public Class FullTextBible
     Public Text As New List(Of word)
+    Public Name As String
 
+    '****************************
+    'REGEX Pattern Definitions
+    '****************************
     Public Const WITHIN As String = "[\[\]\(\)\{\}, \u0040-\u4040A-Za-z0-9]*<[Ww][Ii][Tt][Hh][Ii][Nn][A-Za-z0-9 ]*>[\[\]\(\)\{\}, \u0040-\u4040A-Za-z0-9]*"
     Public Const [OR] As String = "<[Oo][Rr]>"
     Public Const [AND] As String = "<[Aa][Nn][Dd]>"
     Public Const [XOR] As String = "<[Xx][Oo][Rr]>"
     Public Const [NOT] As String = "<[Nn][Oo][Tt]>"
     Public Const STRONGS As String = "<[GH][0-9]*>"
+    '*****************************
 
+    '****************************
+    'REGEX Object Definitions
+    '****************************
     Private WithinRegex As New Regex(WITHIN, RegexOptions.Compiled)
     Private OrRegex As New Regex([OR], RegexOptions.Compiled)
     Private AndRegex As New Regex([AND], RegexOptions.Compiled)
     Private XorRegex As New Regex([XOR], RegexOptions.Compiled)
     Private NotRegex As New Regex([NOT], RegexOptions.Compiled)
     Private StrongsRegex As New Regex(STRONGS, RegexOptions.Compiled)
+    '****************************
+
+    Public Function ToBible() As Bible
+        Dim b As New Bible(Me.Name)
+        For Each w As word In Me.Text
+            If Not b.Books.ContainsKey(w.Book) Then
+                Dim bk As New Book(w.Book)
+                b.Books.Add(w.Book, bk)
+            End If
+            If Not b.Books(w.Book).Chapters.Count >= w.Chapter Then
+                b.Books(w.Book).Chapters.Add(New Chapter)
+            End If
+
+            Dim foundVerse As Boolean = False
+            For i As Integer = 0 To b.Books(w.Book).Chapters(w.Chapter - 1).Verse.Count - 1
+                Dim v As Verse = b.Books(w.Book).Chapters(w.Chapter - 1).Verse(i)
+                If b.Books(w.Book).Chapters(w.Chapter - 1).Verse(i).Chapter = w.Chapter _
+                                        And b.Books(w.Book).Chapters(w.Chapter - 1).Verse(i).Verse = w.Verse Then
+                    b.Books(w.Book).Chapters(w.Chapter - 1).Verse(i).Words.Add(w)
+                    b.Books(w.Book).Chapters(w.Chapter - 1).Verse(i).Text.AppendFormat("{0} ", w._Text)
+                    foundVerse = True
+                    Exit For
+                End If
+            Next
+
+            If Not foundVerse Then
+                Dim v As New Verse
+                v.Words.Add(w)
+                v.Text.AppendFormat("{0} ", w._Text)
+                v.Book = w.Book
+                v.Chapter = w.Chapter
+                v.Verse = w.Verse
+                b.Books(w.Book).Chapters(w.Chapter - 1).Verse.Add(v)
+            End If
+
+        Next
+        Return b
+    End Function
 
     Public Function ParseCommandBlock(cmd As String) As Condition
         Dim c As New Condition
