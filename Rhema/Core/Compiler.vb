@@ -47,7 +47,7 @@ Module Compiler
                         Class Script
                             Implements IScript
                             Public Function Run() As Object Implements IScript.Run
-                                <%= src.Replace("\n", ControlChars.NewLine) %>
+                                <%= src %>
                             End Function
                         End Class
             </code>.ToString
