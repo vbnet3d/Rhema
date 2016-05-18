@@ -27,69 +27,10 @@ Imports System.IO
 Imports System.Reflection
 
 Public Class frmMain
-    Dim curBible As Bible
-    Dim curFtBible As FullTextBible
-    Dim ftBibles As New List(Of FullTextBible)
-    Dim Lexicon As Lexicon
-    Dim Bibles As New List(Of Bible)
-    Dim b As Book
-    Dim c As Chapter
-
-    Dim _assembly As [Assembly]
-
-    Dim ac As AutoCompleteStringCollection
-
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
-        _assembly = [Assembly].GetExecutingAssembly()
-
-        createBible()
-    End Sub
-
-    Private Sub createBible()
-        Dim list() As String = _assembly.GetManifestResourceNames
-        For Each s As String In list
-            If s.Contains("bible") Then
-                Using _s = New StreamReader(_assembly.GetManifestResourceStream(s))
-                    Dim name As String = s.Substring(s.IndexOf(".") + 1, s.LastIndexOf(".") - s.IndexOf(".") - 1)
-                    Dim fb As FullTextBible = BibleData.Load(_s, name)
-                    Bibles.Add(fb.ToBible)
-                    ftBibles.Add(fb)
-                    cmbBible.Items.Add(fb.Name)
-                End Using
-            End If
-        Next
-
-        Try
-            Dim d As New IO.DirectoryInfo(".\bibles")
-            Dim files As IO.FileInfo() = d.GetFiles
-            For Each f As IO.FileInfo In files
-                If f.Extension.Contains("bible") Then
-                    If Not cmbBible.Items.Contains(f.Name.Replace(".bible", "")) Then
-                        Dim fb As FullTextBible = BibleData.Load(f.FullName)
-                        Bibles.Add(fb.ToBible)
-                        ftBibles.Add(fb)
-                        cmbBible.Items.Add(fb.Name)
-                    End If
-                End If
-            Next
-        Catch ex As Exception
-            Debug.Print(ex.Message)
-        End Try
-
-
-        curBible = Bibles.Last
-        curFtBible = ftBibles.Last
-        cmbBible.Text = curBible.Name
-
-        'ac = New AutoCompleteStringCollection
-        'Dim strongs As Lexicon = Import.Lexicon(".\strongs.csv")
-        'For Each e As LexicalEntry In strongs.Entry.Values
-        '    ac.Add(e.simpleform)
-        'Next
-        'Me.GreekText1.AutoCompleteCustomSource = ac
-        'Me.GreekText1.AutoCompleteMode = AutoCompleteMode.SuggestAppend
-        'Me.GreekText1.AutoCompleteSource = AutoCompleteSource.CustomSource
+        cmbBible.Items.AddRange(BibleList.ToArray)
+        cmbBible.Text = BibleList.Last
     End Sub
 
     Private Sub cmbBook_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbBook.SelectedIndexChanged
@@ -135,5 +76,11 @@ Public Class frmMain
                 cmbBook.Items.AddRange(curBible.BookList())
             End If
         Next
+    End Sub
+
+    Private Sub frmMain_Closed(sender As Object, e As EventArgs) Handles Me.Closed
+        If Not IsNothing(Me.ParentForm) Then
+            Me.ParentForm.Close()
+        End If
     End Sub
 End Class

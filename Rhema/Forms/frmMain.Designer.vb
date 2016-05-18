@@ -22,6 +22,7 @@ Partial Class frmMain
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.txt = New System.Windows.Forms.TextBox()
         Me.cmbBook = New System.Windows.Forms.ComboBox()
         Me.cmbChap = New System.Windows.Forms.ComboBox()
@@ -138,6 +139,7 @@ Partial Class frmMain
         Me.Controls.Add(Me.cmbChap)
         Me.Controls.Add(Me.cmbBook)
         Me.Controls.Add(Me.txt)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmMain"
         Me.Text = "Rhema"
         Me.ResumeLayout(False)

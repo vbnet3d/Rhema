@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("Rhema")>
-<Assembly: AssemblyDescription("Rhema Bible Syntax Search Tool")>
+<Assembly: AssemblyDescription("Bible Syntax Search Tool")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("Rhema")>
 <Assembly: AssemblyCopyright("Copyright ©  2016 David Dzimianski")>
