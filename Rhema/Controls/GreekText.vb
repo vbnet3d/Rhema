@@ -1,4 +1,7 @@
-﻿Public Class GreekText
+﻿Option Explicit On
+Option Strict On
+
+Public Class GreekText
     Inherits TextBox
 
     Private ld As New Dictionary(Of Char, Char)
@@ -88,7 +91,7 @@
     Protected Overrides Sub OnTextChanged(ByVal e As System.EventArgs)
         Dim p As Integer = Me.SelectionStart
 
-        Dim words As String() = Me.Text.Split(" ")
+        Dim words As String() = Me.Text.Split(CType(" ", Char()))
 
         For i As Integer = 0 To words.Length - 1
             words(i) = words(i).Replace("ς", "σ")

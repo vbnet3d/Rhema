@@ -1,4 +1,5 @@
-﻿Imports System.Threading
+﻿Option Explicit On
+Option Strict On
 
 Public Class frmMain
     Dim curBible As Bible

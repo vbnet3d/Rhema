@@ -1,4 +1,7 @@
-﻿#Region "WORD"
+﻿Option Explicit On
+Option Strict On
+
+#Region "WORD"
 
 '#######################################################################################
 'WORD class - represents an individual word with all its parsing and lexical information
