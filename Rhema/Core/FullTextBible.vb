@@ -1,4 +1,6 @@
-﻿'The MIT License (MIT)
+﻿Option Explicit On
+Option Strict On
+'The MIT License (MIT)
 
 'Copyright(c) 2016 David Dzimianski
 
@@ -20,9 +22,7 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Option Explicit On
-Option Strict On
-
+Imports System.Text
 Imports System.Text.RegularExpressions
 
 Public Class FullTextBible
@@ -33,7 +33,7 @@ Public Class FullTextBible
     '****************************
     'REGEX Pattern Definitions
     '****************************
-    Public Const WITHIN As String = "[\[\]\(\)\{\}, \u0040-\u4040A-Za-z0-9]*<[Ww][Ii][Tt][Hh][Ii][Nn][A-Za-z0-9 ]*>[\[\]\(\)\{\}, \u0040-\u4040A-Za-z0-9]*"
+    Public Const WITHIN As String = "[\[\]\(\)\{\}, \u0040-\u4040A-Za-z0-9]*<[WFP][IOR][TLE][A-Za-z0-9 ]*>[\[\]\(\)\{\}, \u0040-\u4040A-Za-z0-9]*"
     Public Const [OR] As String = "<[Oo][Rr]>"
     Public Const [AND] As String = "<[Aa][Nn][Dd]>"
     Public Const [XOR] As String = "<[Xx][Oo][Rr]>"
@@ -44,6 +44,7 @@ Public Class FullTextBible
     '****************************
     'REGEX Object Definitions
     '****************************
+    Private CommandRegex As New Regex("<[WFP][IOR][TLE][A-Za-z0-9 ]*>", RegexOptions.Compiled)
     Private WithinRegex As New Regex(WITHIN, RegexOptions.Compiled)
     Private OrRegex As New Regex([OR], RegexOptions.Compiled)
     Private AndRegex As New Regex([AND], RegexOptions.Compiled)
@@ -140,15 +141,225 @@ Public Class FullTextBible
         Return c_groups
     End Function
 
-    Private Function FuncWithin(x As String, y As String, dist As Integer, unit As String) As Integer
-        Dim count As Integer
+    Public TokenDefinitions As New List(Of Regex)
 
-        Select Case unit
-            Case "Words"
+    Private Function Tokenize(s As String) As Token()
+        If TokenDefinitions.Count <= 0 Then
+            TokenDefinitions.Add(New Regex("<[^GH][A-Za-z0-9 ]*>", RegexOptions.Compiled))
+            TokenDefinitions.Add(New Regex("<[GH][0-9]*>", RegexOptions.Compiled))
+            TokenDefinitions.Add(New Regex("[\[][A-Za-z0-9 ]*[\]]", RegexOptions.Compiled))
+            TokenDefinitions.Add(New Regex("\.\.\.", RegexOptions.Compiled))
+            TokenDefinitions.Add(New Regex("[A-Za-z0-9Α-ῼ]*", RegexOptions.Compiled))
+        End If
 
+        Dim t As New List(Of Token)
+
+        Dim curType As UnitType = UnitType.Command
+        For Each d As Regex In TokenDefinitions
+            Dim m As MatchCollection = d.Matches(s)
+            For Each match As Match In m
+                If Not match.Value = "" Then
+                    'Disallow repeated tokenizing... first come first serve tokenizing.
+                    s = s.Remove(match.Index, match.Length)
+                    s = s.Insert(match.Index, "".PadRight(match.Length, CChar("#")))
+
+                    Dim token As New Token
+                    token.Raw = match.Value
+                    token.Index = match.Index
+                    token.LastIndex = match.Length + match.Index
+                    token.Type = curType
+                    t.Add(token)
+                End If
+            Next
+            Dim tp As UnitType = CType(CType(curType, Integer) + 1, UnitType)
+            If System.Enum.IsDefined(GetType(UnitType), tp) Then
+                curType = tp
+            Else
+                curType = UnitType.Literal
+            End If
+        Next
+
+        t.Sort()
+
+        Return t.ToArray
+    End Function
+
+    Private Function Unitize(tokens As Token()) As Unit()
+        Dim u As New List(Of Unit)
+        Dim curUnit As New Unit
+
+        For Each t As Token In tokens
+            If t.Type = UnitType.Command Then
+                If curUnit.Tokens.Count > 0 Then
+                    u.Add(curUnit)
+                    curUnit = New Unit
+                End If
+                curUnit.Tokens.Add(t)
+                curUnit.Type = t.Type
+                u.Add(curUnit)
+                curUnit = New Unit
+            Else
+                If curUnit.Tokens.Count = 0 Then
+                    curUnit.Type = t.Type
+                End If
+                curUnit.Tokens.Add(t)
+                If curUnit.Type <> t.Type Then
+                    curUnit.Type = UnitType.Complex
+                End If
+            End If
+        Next
+        If curUnit.Tokens.Count > 0 Then
+            u.Add(curUnit)
+        End If
+
+        Return u.ToArray
+    End Function
+
+    Private Function GetCondition(s As String) As Condition
+        Dim con As New Condition
+        s = s.Replace("<", "").Replace(">", "")
+        Select Case s(0).ToString
+            Case "W"
+                con.Type = "WITHIN"
+            Case "F"
+                con.Type = "FOLLOWEDBY"
+            Case "P"
+                con.Type = "PRECEDEDBY"
         End Select
+        Dim data() As String = s.Split(CType(" ", Char()))
+        For Each d As String In data
+            If Not d = con.Type Then
+                con.Options.Add(d)
+            End If
+        Next
+        Return con
+    End Function
 
-        Return count
+    Public Function Search2(s As String) As List(Of Reference)
+        Dim refs As New List(Of Reference)
+
+        Dim conditions As Condition() = curFtBible.Search(Unitize(Tokenize(s)))
+
+        For i As Integer = 0 To Me.Text.Count - 1
+            If Search(conditions) Then
+                For Each c As Condition In conditions
+                    refs.AddRange(c.Result.References)
+                Next
+            End If
+        Next
+
+        Return refs
+    End Function
+
+    Public Function Search(units As Unit()) As Condition()
+        Try
+            Dim c As New List(Of Condition)
+            For i As Integer = 0 To units.Count - 1
+                If Not units(i).Used Then
+                    If units(i).Type <> UnitType.Command Then
+                        If units.Count > i + 1 Then
+                            If CommandRegex.IsMatch(units(i + 1).Tokens.First.Raw) Then
+                                'SKIP ME
+                            Else
+                                'ADD ME
+                                Dim con As New Condition
+                                con.Type = "SIMPLE"
+                                con.Unit1 = units(i)
+                                c.Add(con)
+                                units(i).Used = True
+                            End If
+                        Else
+                            ' End of the line - SIMPLE
+                            Dim con As New Condition
+                            con.Type = "SIMPLE"
+                            con.Unit1 = units(i)
+                            units(i).Used = True
+                            c.Add(con)
+                        End If
+                    Else
+                        If CommandRegex.IsMatch(units(i).Tokens.First.Raw) Then
+                            Dim con As Condition = GetCondition(units(i).Tokens.First.Raw)
+
+                            con.Unit1 = units(i - 1)
+                            con.Unit2 = units(i + 1)
+                            units(i - 1).Used = True
+                            units(i + 1).Used = True
+                            c.Add(con)
+                        Else
+                            Dim con As New Condition
+                            units(i).Used = True
+                            con.Type = units(i).Tokens.First.Raw.Replace("<", "").Replace(">", "")
+                            c.Add(con)
+                        End If
+                    End If
+                End If
+            Next
+
+
+            Return c.ToArray
+        Catch ex As Exception
+            Throw New Exception("Invalid search syntax", ex)
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function Search(conditions As Condition()) As Boolean
+        'TODO: build search string as trues/falses with And, Or, Xor, and Not
+        Dim syntax As New StringBuilder
+
+        For Each c As Condition In conditions
+            If c.Type.Length <= 3 Then
+                syntax.Append(" " & c.Type)
+            Else
+                syntax.Append(" " & c.Result.Success)
+            End If
+        Next
+
+        Dim script As String = <script>
+                                   If <%= syntax.ToString %> Then
+                                        Return True
+                                   Else
+                                        Return False
+                                   End If
+                               </script>.ToString
+        Return CBool(Compiler.Run(script))
+    End Function
+
+    Private Function FuncSimple(index As Integer, u As Unit) As Result
+        Dim res As New Result
+
+        Dim refs As New Reference
+        Dim match As Boolean
+
+        If u.Tokens.First.Raw = Me.Text(index)._Text Then
+            match = True
+            refs.AddRange(Me.Text(index).Chapter, Me.Text(index).Verse)
+            refs.Book = Me.Text(index).Book
+            For i As Integer = 1 To u.Tokens.Count - 1
+                If (i + index) < Me.Text.Count Then
+                    If u.Tokens(i).Raw <> Me.Text(index + i)._Text Then
+                        match = False
+                        Exit For
+                    Else
+                        refs.AddRange(Me.Text(index + i).Chapter, Me.Text(index + i).Verse)
+                    End If
+                End If
+            Next
+        End If
+
+        If match Then
+            res.Success = True
+            res.References.Add(refs)
+        End If
+
+        Return res
+    End Function
+
+    Private Function FuncProximity(index As Integer, x As Unit, y As Unit, dist As Integer, Optional forward As Boolean = True, Optional backward As Boolean = True, Optional unit As String = "WORDS") As Result
+        Dim res As New Result
+
+
+        Return res
     End Function
 
     Public Function Search(command As String) As List(Of Reference)
@@ -225,7 +436,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(b).Chapter, Me.Text(b).Verse)
-                                    c.Result = True
+
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -241,7 +452,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(f).Chapter, Me.Text(f).Verse)
-                                    c.Result = True
+
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -258,7 +469,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(b).Chapter, Me.Text(b).Verse)
-                                    c.Result = True
+
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -274,7 +485,7 @@ Public Class FullTextBible
                                     r.Book = Me.Text(i).Book
                                     r.AddRange(Me.Text(i).Chapter, Me.Text(i).Verse)
                                     r.AddRange(Me.Text(f).Chapter, Me.Text(f).Verse)
-                                    c.Result = True
+
                                     If Not l.Contains(r) Then
                                         l.Add(r)
                                     End If
@@ -294,7 +505,7 @@ Public Class FullTextBible
                             r.EndChapter = Me.Text(i).Chapter
                             r.EndVerse = Me.Text(i).Verse
                             l.Add(r)
-                            c.Result = True
+
                         End If
                     End If
                 Next
