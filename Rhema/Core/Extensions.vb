@@ -41,12 +41,12 @@ Public Module RegexConvert
 
     <System.Runtime.CompilerServices.Extension>
     Public Function ToGreekLettersOnly(input As String) As String
-        Return Parsing.RemoveDiacriticals(input)
+        Return ParsingFunctions.RemoveDiacriticals(input)
     End Function
 
     <System.Runtime.CompilerServices.Extension>
     Public Function ToHebrewLettersOnly(input As String) As String
-        Return Parsing.RemoveDiacriticals(input)
+        Return ParsingFunctions.RemoveDiacriticals(input)
     End Function
 
     <System.Runtime.CompilerServices.Extension>

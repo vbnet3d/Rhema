@@ -49,6 +49,18 @@ Public Class word
 
     End Sub
 
+    Public Function Parsing() As Parsing
+        Dim p As New Parsing
+        p.Gender = Me._Gender
+        p.Number = Me._Number
+        p.Case = Me._Case
+        p.Tense = Me._Tense
+        p.Voice = Me._Voice
+        p.Mood = Me._Mood
+        p.Person = Me._Person
+        Return p
+    End Function
+
     Public Sub New(ByVal text As String, ByVal strongs() As String, ByVal parsing As String)
         _Text = text
         _Strongs = strongs

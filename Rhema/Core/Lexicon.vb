@@ -40,7 +40,7 @@ Public Module Import
             e.description = data(4)
             e.PartOfSpeech = data(5)
             e.Language = data(6)
-            e.simpleform = Parsing.RemoveDiacriticals(e.lemma)
+            e.simpleform = ParsingFunctions.RemoveDiacriticals(e.lemma)
             l.Entry.Add(e.ID, e)
         Loop
 

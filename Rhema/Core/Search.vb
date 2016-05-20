@@ -25,6 +25,7 @@ Option Strict On
 
 Imports System.Globalization
 Imports System.Text
+Imports System.Text.RegularExpressions
 
 Public Class Result
     Public Success As Boolean = False
@@ -40,6 +41,114 @@ Public Class Result
     End Function
 End Class
 
+Public Class Parsing
+    Public Id As Integer
+    Public Gender As String
+    Public Number As String
+    Public [Case] As String
+    Public Tense As String
+    Public Voice As String
+    Public Mood As String
+    Public Person As String
+
+    Public Overrides Function Equals(obj As Object) As Boolean
+        Dim res As Boolean = False
+        Dim p As Parsing = TryCast(obj, Parsing)
+        If Not IsNothing(p) Then
+            If Not IsNothing(Me.Gender) Then
+                If Me.Gender = p.Gender Then
+                    res = True
+                Else
+                    res = False
+                End If
+            End If
+            If Not IsNothing(Me.Case) Then
+                If Me.Case = p.Case Then
+                    res = True
+                Else
+                    res = False
+                End If
+            End If
+            If Not IsNothing(Me.Number) Then
+                If Me.Number = p.Number Then
+                    res = True
+                Else
+                    res = False
+                End If
+            End If
+            If Not IsNothing(Me.Tense) Then
+                If Me.Tense = p.Tense Then
+                    res = True
+                Else
+                    res = False
+                End If
+            End If
+            If Not IsNothing(Me.Voice) Then
+                If Me.Voice = p.Voice Then
+                    res = True
+                Else
+                    res = False
+                End If
+            End If
+            If Not IsNothing(Me.Mood) Then
+                If Me.Mood = p.Mood Then
+                    res = True
+                Else
+                    res = False
+                End If
+            End If
+            If Not IsNothing(Me.Person) Then
+                If Me.Person = p.Person Then
+                    res = True
+                Else
+                    res = False
+                End If
+            End If
+        Else
+            Return False
+        End If
+
+
+        Return res
+    End Function
+End Class
+
+Public Class PartOfSpeech
+    Public Type As String
+    Public Id As Integer = -1
+    Public Parsing As Parsing
+
+    Public Sub New(s As String)
+        s = s.Replace("[", "").Replace("]", "")
+        Dim data() As String = s.Split(CType(" ", Char()))
+        Type = data(0)
+        For i = 1 To data.Length - 1
+            If IsNumeric(data(i)) Then
+                id = CInt(data(i))
+            Else
+                Parsing = New Parsing()
+                Parsing.Id = Id
+                'GNC for substantives or TVMPN for standard Greek verbs. Greek Participle parsing Is in the form of TVMGNC.
+                If Type.ToUpper = "VERB" Then
+                    Parsing.Tense = IIf(data(i)(0).ToString = "*", Nothing, data(i)(0).ToString).ToString
+                    Parsing.Voice = IIf(data(i)(1).ToString = "*", Nothing, data(i)(1).ToString).ToString
+                    Parsing.Mood = IIf(data(i)(2).ToString = "*", Nothing, data(i)(2).ToString).ToString
+                    If data(i).Length = 6 Then
+                        'Participles
+                        Parsing.Gender = IIf(data(i)(3).ToString = "*", Nothing, data(i)(0).ToString).ToString
+                        Parsing.Number = IIf(data(i)(4).ToString = "*", Nothing, data(i)(1).ToString).ToString
+                        Parsing.Case = IIf(data(i)(5).ToString = "*", Nothing, data(i)(2).ToString).ToString
+                    End If
+                Else
+                    Parsing.Gender = IIf(data(i)(0).ToString = "*", Nothing, data(i)(0).ToString).ToString
+                    Parsing.Number = IIf(data(i)(1).ToString = "*", Nothing, data(i)(1).ToString).ToString
+                    Parsing.Case = IIf(data(i)(2).ToString = "*", Nothing, data(i)(2).ToString).ToString
+                End If
+            End If
+        Next
+    End Sub
+End Class
+
 Public Class Token
     Implements IComparable(Of Token)
 
@@ -47,6 +156,14 @@ Public Class Token
     Public Index As Integer
     Public LastIndex As Integer
     Public Type As UnitType
+
+    Public Function StrongsNumber() As String
+        Return Raw.Replace("<", "").Replace(">", "")
+    End Function
+
+    Public Function PartOfSpeech() As PartOfSpeech
+        Return New PartOfSpeech(Raw)
+    End Function
 
     Public Function CompareTo(other As Token) As Integer Implements IComparable(Of Token).CompareTo
         Return Me.Index.CompareTo(other.Index)
@@ -112,7 +229,7 @@ Public Class Condition
     End Function
 End Class
 
-Public Module Parsing
+Public Module ParsingFunctions
     Public Function RemoveDiacriticals(input As String) As String
         Dim decomposed As String = input.Normalize(NormalizationForm.FormD)
         Dim filtered As Char() = decomposed.Where(Function(c) Char.GetUnicodeCategory(c) <> UnicodeCategory.NonSpacingMark).ToArray()

@@ -64,6 +64,13 @@ Public Module BibleData
                     End If
                 End If
                 b.Text.Add(w)
+                If Not AutoCompleteList.Contains(w._Text) Then
+                    AutoCompleteList.Add(w._Text)
+                End If
+                Dim p As String = "[" & w._Type.ToUpper & "]"
+                If Not AutoCompleteList.Contains(p) Then
+                    AutoCompleteList.Add(p)
+                End If
             End If
         Next
 

@@ -325,29 +325,67 @@ Public Class FullTextBible
         Return CBool(Compiler.Run(script))
     End Function
 
+    Private Function Match(t As Token, w As word, Optional ids As Dictionary(Of Integer, Parsing) = Nothing) As Boolean
+        If t.Type = UnitType.Literal Then
+            If t.Raw = w._Text Then
+                Return True
+            Else
+                Return False
+            End If
+        ElseIf t.Type = UnitType.Strongs Then
+            If t.StrongsNumber = w.StrongsNumber Then
+                Return True
+            Else
+                Return False
+            End If
+        ElseIf t.Type = UnitType.PartOfSpeech Then
+            Dim p As PartOfSpeech = t.PartOfSpeech
+            Dim found As Boolean = False
+            If w._Type.ToUpper Like "%" & p.Type & "%" Then
+                found = True
+                If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
+                    found = w.Parsing.Equals(ids(p.Id))
+                Else
+                    If Not IsNothing(p.Parsing) Then
+                        found = p.Parsing.Equals(w.Parsing)
+                    End If
+                End If
+            End If
+            Return found
+        Else
+            Return False
+        End If
+    End Function
+
     Private Function FuncSimple(index As Integer, u As Unit) As Result
         Dim res As New Result
 
         Dim refs As New Reference
-        Dim match As Boolean
+        Dim found As Boolean
 
-        If u.Tokens.First.Raw = Me.Text(index)._Text Then
-            match = True
+        Dim ids As New Dictionary(Of Integer, Parsing)
+
+        If Match(u.Tokens.First, Me.Text(index), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
+            found = True
+            Dim p As PartOfSpeech = u.Tokens.First.PartOfSpeech
+            If Not ids.ContainsKey(p.Id) Then
+                ids.Add(p.Id, Me.Text(index).Parsing)
+            End If
             refs.AddRange(Me.Text(index).Chapter, Me.Text(index).Verse)
-            refs.Book = Me.Text(index).Book
-            For i As Integer = 1 To u.Tokens.Count - 1
-                If (i + index) < Me.Text.Count Then
-                    If u.Tokens(i).Raw <> Me.Text(index + i)._Text Then
-                        match = False
-                        Exit For
-                    Else
-                        refs.AddRange(Me.Text(index + i).Chapter, Me.Text(index + i).Verse)
+                refs.Book = Me.Text(index).Book
+                For i As Integer = 1 To u.Tokens.Count - 1
+                    If (i + index) < Me.Text.Count Then
+                        If Match(u.Tokens.First, Me.Text(index + i), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
+                            found = False
+                            Exit For
+                        Else
+                            refs.AddRange(Me.Text(index + i).Chapter, Me.Text(index + i).Verse)
+                        End If
                     End If
-                End If
-            Next
-        End If
+                Next
+            End If
 
-        If match Then
+            If found Then
             res.Success = True
             res.References.Add(refs)
         End If

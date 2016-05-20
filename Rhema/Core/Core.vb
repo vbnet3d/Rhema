@@ -33,12 +33,23 @@ Public Module Core
     Public Lexicon As Lexicon
     Public Bibles As New List(Of Bible)
     Public BibleList As New List(Of String)
+    Public AutoCompleteList As New List(Of String)
     Public b As Book
     Public c As Chapter
     Dim _assembly As [Assembly]
 
     Public Sub Initialize()
         _assembly = [Assembly].GetExecutingAssembly()
+
+        Dim rgx_any As String = "[\[][A-Za-z0-9Α-ῼ ]*[\]]"
+
+        AutoCompleteList.Add("<WITHIN # WORDS>")
+        AutoCompleteList.Add("<AND>")
+        AutoCompleteList.Add("<OR>")
+        AutoCompleteList.Add("<NOT>")
+        AutoCompleteList.Add("<XOR>")
+        AutoCompleteList.Add("<FOLLOWEDBY # WORDS>")
+        AutoCompleteList.Add("<PRECEDEDBY # WORDS>")
 
         Dim list() As String = _assembly.GetManifestResourceNames
         For Each s As String In list
