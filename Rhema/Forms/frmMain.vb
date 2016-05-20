@@ -29,6 +29,7 @@ Imports System.Reflection
 Public Class frmMain
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
+        Search.Unitize(Search.Tokenize("[ARTICLE 1] ... [SUBSTANTIVE 1] ... και ... [SUBSTANTIVE 1] <WITHIN 5 WORDS> <G123>"))
         cmbBible.Items.AddRange(BibleList.ToArray)
         cmbBible.Text = BibleList.Last
     End Sub
@@ -82,5 +83,10 @@ Public Class frmMain
         If Not IsNothing(Me.ParentForm) Then
             Me.ParentForm.Close()
         End If
+        Application.Exit()
+    End Sub
+
+    Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
     End Sub
 End Class

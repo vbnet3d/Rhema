@@ -28,6 +28,7 @@ Imports System.Text.RegularExpressions
 Public Class FullTextBible
     Public Text As New List(Of word)
     Public Name As String
+    Public Language As Language
 
     '****************************
     'REGEX Pattern Definitions

@@ -23,10 +23,18 @@
 Option Explicit On
 Option Strict On
 
+Public Module Languages
+    Public Const GREEK_START As Integer = 913
+    Public Const GREEK_END As Integer = 969
+    Public Const HEBREW_START As Integer = 1478
+    Public Const HEBREW_END As Integer = 1514
+End Module
+
 Public Enum Language
+    None = -1
     English = 0
-    Greek = 1
-    Hebrew = 2
+    Greek = 1 '913 - 969
+    Hebrew = 2 '1478 - 1514
 End Enum
 
 Public Class GreekText

@@ -30,9 +30,9 @@ Partial Class frmMain
         Me.Button1 = New System.Windows.Forms.Button()
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.lblResults = New System.Windows.Forms.Label()
-        Me.GreekText1 = New Rhema.GreekText()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cmbBible = New System.Windows.Forms.ComboBox()
+        Me.GreekText1 = New Rhema.GreekText()
         Me.SuspendLayout()
         '
         'txt
@@ -98,14 +98,6 @@ Partial Class frmMain
         Me.lblResults.Size = New System.Drawing.Size(0, 13)
         Me.lblResults.TabIndex = 10
         '
-        'GreekText1
-        '
-        Me.GreekText1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GreekText1.Location = New System.Drawing.Point(244, 2)
-        Me.GreekText1.Name = "GreekText1"
-        Me.GreekText1.Size = New System.Drawing.Size(346, 26)
-        Me.GreekText1.TabIndex = 6
-        '
         'Label1
         '
         Me.Label1.AutoSize = True
@@ -122,6 +114,14 @@ Partial Class frmMain
         Me.cmbBible.Name = "cmbBible"
         Me.cmbBible.Size = New System.Drawing.Size(192, 21)
         Me.cmbBible.TabIndex = 12
+        '
+        'GreekText1
+        '
+        Me.GreekText1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GreekText1.Location = New System.Drawing.Point(244, 2)
+        Me.GreekText1.Name = "GreekText1"
+        Me.GreekText1.Size = New System.Drawing.Size(346, 26)
+        Me.GreekText1.TabIndex = 6
         '
         'frmMain
         '

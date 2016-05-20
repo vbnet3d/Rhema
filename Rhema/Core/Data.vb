@@ -33,6 +33,7 @@ Public Module BibleData
     Private Function Load(contents() As String, name As String) As FullTextBible
         Dim b As New FullTextBible
         b.Name = name
+        b.Language = Language.None
 
         For Each s As String In contents
             Dim w As New word
@@ -53,6 +54,15 @@ Public Module BibleData
                 w._Voice = data(10)
                 w._Person = data(11)
                 w._Type = data(12)
+                If b.Language = Language.None Then
+                    If AscW(w._Text(0)) >= Languages.GREEK_START And AscW(w._Text(0)) <= Languages.GREEK_START Then
+                        b.Language = Language.Greek
+                    ElseIf AscW(w._Text(0)) >= Languages.HEBREW_START And AscW(w._Text(0)) <= Languages.HEBREW_END Then
+                        b.Language = Language.Hebrew
+                    Else
+                        b.Language = Language.English
+                    End If
+                End If
                 b.Text.Add(w)
             End If
         Next
@@ -62,9 +72,7 @@ Public Module BibleData
 
     Public Function Load(s As IO.StreamReader, name As String) As FullTextBible
         Dim contents As New List(Of String)
-        While Not s.Peek = -1
-            contents.Add(s.ReadLine)
-        End While
+        contents.AddRange(s.ReadToEnd.Split(CType(vbCrLf, Char()), StringSplitOptions.RemoveEmptyEntries))
         Return Load(contents.ToArray, name)
     End Function
 
