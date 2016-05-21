@@ -408,7 +408,7 @@ Public Class FullTextBible
                         flexibleSearch = True
                     Else
                         If Not Match(u.Tokens(i), Me.Text(index + wordIndex), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
-                            If flexibleSearch Then
+                            If flexibleSearch Then 'TODO: fix Flexible Search...
                                 For x As Integer = wordIndex + 1 To wordIndex + 3
                                     If Match(u.Tokens(i), Me.Text(index + x), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
                                         found = True

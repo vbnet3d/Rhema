@@ -138,6 +138,8 @@ Public Class Reference
         If StartChapter = 0 And StartVerse = 0 Then
             StartChapter = chapter
             StartVerse = verse
+            EndChapter = chapter
+            EndVerse = verse
         Else
             If chapter = StartChapter Then
                 If StartVerse > verse Then
