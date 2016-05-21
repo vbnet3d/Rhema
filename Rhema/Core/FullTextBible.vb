@@ -247,7 +247,7 @@ Public Class FullTextBible
                 If c.Type = "SIMPLE" Then
                     c.Result = FuncSimple(i, c.Unit1)
                 Else
-                    c.Result = New Result()
+                    c.Result = New Result() 'TODO: Proximity functions...
                 End If
             Next
 
@@ -315,8 +315,31 @@ Public Class FullTextBible
 
     Public Function Search(conditions As Condition()) As Boolean
         'TODO: calculate total of complex search with And, Or, Xor, and Not
-        Dim status As Boolean = False
+        Dim status As Boolean = True
 
+        If conditions.Length = 1 Then
+            If Not IsNothing(conditions(0).Result) Then
+                Return conditions(0).Result.Success
+            Else
+                Return False
+            End If
+        End If
+
+            For i As Integer = 0 To conditions.Length - 1
+            Select Case conditions(i).Type.ToUpper
+                Case "AND"
+                    status = Evaluate.And(conditions(i - 1), conditions(i + 1))
+                Case "OR"
+                    status = Evaluate.Or(conditions(i - 1), conditions(i + 1))
+                Case "NOT"
+                    status = Evaluate.Not(conditions(i - 1), conditions(i + 1))
+                Case "XOR"
+                    status = Evaluate.Xor(conditions(i - 1), conditions(i + 1))
+            End Select
+            If Not status Then
+                Exit For
+            End If
+        Next
 
         Return status
     End Function
@@ -337,6 +360,7 @@ Public Class FullTextBible
         ElseIf t.Type = UnitType.PartOfSpeech Then
             Dim p As PartOfSpeech = t.PartOfSpeech
             Dim found As Boolean = False
+            'TODO: Add "wildcard" types
             If w._Type.ToUpper Like "*" & p.Type & "*" Then
                 found = True
                 If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
@@ -361,6 +385,7 @@ Public Class FullTextBible
 
         Dim ids As New Dictionary(Of Integer, Parsing)
 
+        'TODO: add id + parsing combos.
         If Match(u.Tokens.First, Me.Text(index), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
             found = True
             Dim p As PartOfSpeech = u.Tokens.First.PartOfSpeech

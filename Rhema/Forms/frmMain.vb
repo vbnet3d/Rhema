@@ -29,7 +29,7 @@ Imports System.Reflection
 Public Class frmMain
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
-        curFtBible.Search2("εν αρχη ην ο λογος <OR> αυτος <WITHIN 5 WORDS> ανθρωπος <OR> [ARTICLE 1] [NOUN 1] και [NOUN 1]")
+        curFtBible.Search2("εν αρχη ην ο λογος <OR> [ARTICLE 1 **S] [NOUN 1] και [NOUN 1]") ' <OR> αυτος <WITHIN 5 WORDS> ανθρωπος <OR> [ARTICLE 1] [NOUN 1] και [NOUN 1]
         cmbBible.Items.AddRange(BibleList.ToArray)
         cmbBible.Text = BibleList.Last
     End Sub
@@ -59,10 +59,10 @@ Public Class frmMain
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         Dim search As New System.Text.StringBuilder
         txtSearch.Text = ""
-        Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text).ToArray)
+        Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search2(GreekText1.Text).ToArray)
         Dim i As Integer
         For i = 0 To l.Count - 1
-            search.Append(l(i).Book & " " & (l(i).Chapter + 1) & ":" & (l(i).Verse) & " " & l(i).RawText & vbCrLf)
+            search.Append(l(i).Book & " " & (l(i).Chapter) & ":" & (l(i).Verse) & " " & l(i).RawText & vbCrLf)
         Next
         txtSearch.Text = search.ToString
         lblResults.Text = l.Count & " Result(s)"
