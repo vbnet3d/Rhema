@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Rhema by vbnet3d</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Rhema</h1>
+      <h2 class="project-tagline">Greek/Hebrew Language Syntax Search Tool</h2>
+      <a href="https://github.com/vbnet3d/Rhema" class="btn">View on GitHub</a>
+      <a href="https://github.com/vbnet3d/Rhema/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/vbnet3d/Rhema/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="rhema" class="anchor" href="#rhema" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rhema</h1>
+
+<p>Rhema is a .NET based Greek/Hebrew language syntax search tool designed to be used similar to Accordance, Bible Works, or other major Bible software. It is open-sourced under the MIT license.</p>
+
+<p><a href="https://ci.appveyor.com/project/vbnet3d/rhema"><img src="https://ci.appveyor.com/api/projects/status/07dm7uq4c06ylwj6?svg=true" alt="Build status"></a></p>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h1>
+
+<p>Syntax search using WITHIN command: </p>
+
+<ul>
+<li><code>αυτος &lt;WITHIN 5 WORDS&gt; ανθρωπος</code></li>
+<li><code>αυτος &lt;WITHIN 5 WORDS&gt; ανθρωπος &lt;OR&gt; αυτου &lt;WITHIN 5 WORDS&gt; ανθρωπος</code></li>
+</ul>
+
+<h1>
+<a id="search-syntax-work-in-progress" class="anchor" href="#search-syntax-work-in-progress" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Search Syntax (Work in Progress)</h1>
+
+<h2>
+<a id="commands" class="anchor" href="#commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>COMMANDS</h2>
+
+<hr>
+
+<p>Form: <code>x &lt;command_name options&gt; y</code> </p>
+
+<p>Notes: x and y may be words or other conditions.</p>
+
+<hr>
+
+<ul>
+<li>
+<code>x &lt;WITHIN distance WORDS&gt; y</code> </li>
+<li>
+<code>x &lt;OR&gt; y</code><br>
+</li>
+<li>
+<code>x &lt;AND&gt; y</code> </li>
+<li>
+<code>x &lt;NOT&gt; y</code> </li>
+<li><code>x &lt;XOR&gt; y</code></li>
+<li><code>x &lt;FOLLOWED BY distance WORDS&gt; y</code></li>
+<li>
+<code>x &lt;PRECEDED BY distance WORDS&gt; y</code> </li>
+</ul>
+
+<h2>
+<a id="parts-of-speech" class="anchor" href="#parts-of-speech" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PARTS OF SPEECH</h2>
+
+<hr>
+
+<ul>
+<li>Form: <code>[part_name id(numeric, optional) parsing(optional)]</code>
+</li>
+</ul>
+
+<blockquote>
+<p>Notes: Matching ids are used when you want to select different words
+ with the basic parsing i.e. A Nom. Masc. Sg. Article and Nom. Masc. Sg. Noun, without specifying exactly what forms to return. This allows the user to search for all forms of a syntactic structure. Parsing is in the form of GNC for substantives or TVMPN for standard Greek verbs. Greek Participle parsing Is in the form of TVMGNC. Currently only Greek parsing is available.</p>
+</blockquote>
+
+<hr>
+
+<ul>
+<li>
+<code>[ANY id parsing]</code>           Matches any word unit</li>
+<li>
+<code>[ARTICLE id parsing]</code>       Matches any article</li>
+<li>
+<code>[SUBSTANTIVE id parsing]</code>   Matches any substantive word unit</li>
+<li>
+<code>[NOUN id parsing]</code>          Matches any noun</li>
+<li>
+<code>[ANYPRONOUN id parsing]</code>    Matches any pronoun</li>
+<li>
+<code>[PRONOUN id parsing]</code>       Matches only regular pronouns</li>
+<li>
+<code>[REFLEXIVE id parsing]</code>     Matches only reflexive pronouns</li>
+<li>
+<code>[INDEFINITE id parsing]</code>    Matches only indefinite pronouns</li>
+<li>
+<code>[NUMBER id parsing]</code>        Matches only indeclinable numbers</li>
+<li>
+<code>[PARTICLE id parsing]</code>      Matches only particles</li>
+<li>
+<code>[VERB id parsing]</code>          Matches only verbs</li>
+</ul>
+
+<hr>
+
+<h3>
+<a id="parsing-options" class="anchor" href="#parsing-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Parsing Options:</h3>
+
+<hr>
+
+<ul>
+<li>Gender: M(asculine), F(eminine), N(euter)</li>
+<li>Number: S(ingular), P(lural), D(ual)</li>
+<li>Case:   N(ominative), D(ative), G(enitive), A(ccusative), V(ocative)</li>
+<li>Tense:  P(resent), A(orist), X(Perfect), I(mperfect), F(uture), Y(Pluperfect)</li>
+<li>Voice:  A(ctive), M(iddle), P(assive)</li>
+<li>Mood:   I(ndicative), D(Imperative), (I)N(finitive), P(articiple), S(ubjunctive), O(ptative)</li>
+<li>Person: 1, 2, 3</li>
+</ul>
+
+<hr>
+
+<h2>
+<a id="strongs-numbers" class="anchor" href="#strongs-numbers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Strong's Numbers</h2>
+
+<hr>
+
+<p>Form: <code>&lt;G123&gt;</code></p>
+
+<hr>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/vbnet3d/Rhema">Rhema</a> is maintained by <a href="https://github.com/vbnet3d">vbnet3d</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
