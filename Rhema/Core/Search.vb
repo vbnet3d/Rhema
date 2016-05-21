@@ -93,49 +93,49 @@ Public Class Parsing
         Dim res As Boolean = False
         Dim p As Parsing = TryCast(obj, Parsing)
         If Not IsNothing(p) Then
-            If Not IsNothing(Me.Gender) Then
+            If Not IsNothing(Me.Gender) AndAlso Not Me.Gender = "*" Then
                 If Me.Gender = p.Gender Then
                     res = True
                 Else
                     res = False
                 End If
             End If
-            If Not IsNothing(Me.Case) Then
+            If Not IsNothing(Me.Case) AndAlso Not Me.Case = "*" Then
                 If Me.Case = p.Case Then
                     res = True
                 Else
                     res = False
                 End If
             End If
-            If Not IsNothing(Me.Number) Then
+            If Not IsNothing(Me.Number) AndAlso Not Me.Number = "*" Then
                 If Me.Number = p.Number Then
                     res = True
                 Else
                     res = False
                 End If
             End If
-            If Not IsNothing(Me.Tense) Then
+            If Not IsNothing(Me.Tense) AndAlso Not Me.Tense = "*" Then
                 If Me.Tense = p.Tense Then
                     res = True
                 Else
                     res = False
                 End If
             End If
-            If Not IsNothing(Me.Voice) Then
+            If Not IsNothing(Me.Voice) AndAlso Not Me.Voice = "*" Then
                 If Me.Voice = p.Voice Then
                     res = True
                 Else
                     res = False
                 End If
             End If
-            If Not IsNothing(Me.Mood) Then
+            If Not IsNothing(Me.Mood) AndAlso Not Me.Mood = "*" Then
                 If Me.Mood = p.Mood Then
                     res = True
                 Else
                     res = False
                 End If
             End If
-            If Not IsNothing(Me.Person) Then
+            If Not IsNothing(Me.Person) AndAlso Not Me.Person = "*" Then
                 If Me.Person = p.Person Then
                     res = True
                 Else
@@ -168,19 +168,19 @@ Public Class PartOfSpeech
                 Parsing.Id = Id
                 'GNC for substantives or TVMPN for standard Greek verbs. Greek Participle parsing Is in the form of TVMGNC.
                 If Type.ToUpper = "VERB" Then
-                    Parsing.Tense = IIf(data(i)(0).ToString = "*", Nothing, data(i)(0).ToString).ToString
-                    Parsing.Voice = IIf(data(i)(1).ToString = "*", Nothing, data(i)(1).ToString).ToString
-                    Parsing.Mood = IIf(data(i)(2).ToString = "*", Nothing, data(i)(2).ToString).ToString
+                    Parsing.Tense = IIf(data(i)(0).ToString = "*", "*", data(i)(0).ToString).ToString
+                    Parsing.Voice = IIf(data(i)(1).ToString = "*", "*", data(i)(1).ToString).ToString
+                    Parsing.Mood = IIf(data(i)(2).ToString = "*", "*", data(i)(2).ToString).ToString
                     If data(i).Length = 6 Then
                         'Participles
-                        Parsing.Gender = IIf(data(i)(3).ToString = "*", Nothing, data(i)(0).ToString).ToString
-                        Parsing.Number = IIf(data(i)(4).ToString = "*", Nothing, data(i)(1).ToString).ToString
-                        Parsing.Case = IIf(data(i)(5).ToString = "*", Nothing, data(i)(2).ToString).ToString
+                        Parsing.Gender = IIf(data(i)(3).ToString = "*", "*", data(i)(0).ToString).ToString
+                        Parsing.Number = IIf(data(i)(4).ToString = "*", "*", data(i)(1).ToString).ToString
+                        Parsing.Case = IIf(data(i)(5).ToString = "*", "*", data(i)(2).ToString).ToString
                     End If
                 Else
-                    Parsing.Gender = IIf(data(i)(0).ToString = "*", Nothing, data(i)(0).ToString).ToString
-                    Parsing.Number = IIf(data(i)(1).ToString = "*", Nothing, data(i)(1).ToString).ToString
-                    Parsing.Case = IIf(data(i)(2).ToString = "*", Nothing, data(i)(2).ToString).ToString
+                    Parsing.Gender = IIf(data(i)(0).ToString = "*", "*", data(i)(0).ToString).ToString
+                    Parsing.Number = IIf(data(i)(1).ToString = "*", "*", data(i)(1).ToString).ToString
+                    Parsing.Case = IIf(data(i)(2).ToString = "*", "*", data(i)(2).ToString).ToString
                 End If
             End If
         Next
@@ -245,10 +245,10 @@ End Class
 
 Public Class Condition
     Public Type As String
-    Public X As String 'TODO: Replace with Unit
+    Public X As String 'TODO: Deprecated. Replace with Unit
     Public Unit1 As Unit
     Public Unit2 As Unit
-    Public Y As String 'TODO: Replace with Unit
+    Public Y As String 'TODO: Deprecated. Replace with Unit
     Public Options As New List(Of String)
     Public Result As Result
 

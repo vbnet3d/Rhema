@@ -26,7 +26,7 @@ Option Strict On
 Public Class frmMain
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
-        curFtBible.Search2("εν αρχη ην ο λογος <OR> [ARTICLE 1 **S] [NOUN 1] και [NOUN 1]") ' <OR> αυτος <WITHIN 5 WORDS> ανθρωπος <OR> [ARTICLE 1] [NOUN 1] και [NOUN 1]
+        'curFtBible.Search2("εν αρχη ην ο λογος <OR> [ARTICLE 1 **S] [NOUN 1] και [NOUN 1]") ' <OR> αυτος <WITHIN 5 WORDS> ανθρωπος <OR> [ARTICLE 1] [NOUN 1] και [NOUN 1]
         cmbBible.Items.AddRange(BibleList.ToArray)
         cmbBible.Text = BibleList.Last
     End Sub

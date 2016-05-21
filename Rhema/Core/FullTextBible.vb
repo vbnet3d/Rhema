@@ -148,7 +148,7 @@ Public Class FullTextBible
         If TokenDefinitions.Count <= 0 Then
             TokenDefinitions.Add(New Regex("<[^GH][A-Za-z0-9 ]*>", RegexOptions.Compiled))
             TokenDefinitions.Add(New Regex("<[GH][0-9]*>", RegexOptions.Compiled))
-            TokenDefinitions.Add(New Regex("[\[][A-Za-z0-9 ]*[\]]", RegexOptions.Compiled))
+            TokenDefinitions.Add(New Regex("[\[][A-Za-z0-9 \*]*[\]]", RegexOptions.Compiled))
             TokenDefinitions.Add(New Regex("\.\.\.", RegexOptions.Compiled))
             TokenDefinitions.Add(New Regex("[A-Za-z0-9Α-ῼ]*", RegexOptions.Compiled))
         End If
@@ -313,7 +313,6 @@ Public Class FullTextBible
     End Function
 
     Public Function Search(conditions As Condition()) As Boolean
-        'TODO: calculate total of complex search with And, Or, Xor, and Not
         Dim status As Boolean = True
 
         If conditions.Length = 1 Then
@@ -363,7 +362,11 @@ Public Class FullTextBible
             If w._Type.ToUpper Like "*" & p.Type & "*" Then
                 found = True
                 If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
-                    found = w.Parsing.Equals(ids(p.Id))
+                    If Not IsNothing(p.Parsing) Then
+                        found = p.Parsing.Equals(w.Parsing) And w.Parsing.Equals(ids(p.Id))
+                    Else
+                        found = w.Parsing.Equals(ids(p.Id))
+                    End If
                 Else
                     If Not IsNothing(p.Parsing) Then
                         found = p.Parsing.Equals(w.Parsing)
@@ -420,6 +423,7 @@ Public Class FullTextBible
         Return res
     End Function
 
+    'TODO: This function deprecated. Should be removed after enhanced search is functioning.
     Public Function Search(command As String) As List(Of Reference)
         Dim l As New List(Of Reference)
         Dim condition_groups As List(Of List(Of Condition)) = Parse(command)
@@ -481,7 +485,6 @@ Public Class FullTextBible
         'Form: <G123>
 
 
-        ' TODO: Change this to loop through all conditions in a group while on a specific word index
         ' And then evaluate the result of all the group conditions together before adding the pieces in.
         For Each group As List(Of Condition) In condition_groups
             For Each c As Condition In group
