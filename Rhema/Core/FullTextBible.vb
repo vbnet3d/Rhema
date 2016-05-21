@@ -29,6 +29,8 @@ Public Class FullTextBible
     Public Text As New List(Of word)
     Public Name As String
     Public Language As Language
+    Private Code As String
+    Private infoList As New List(Of Info)
 
     '****************************
     'REGEX Pattern Definitions
@@ -241,6 +243,14 @@ Public Class FullTextBible
         Dim conditions As Condition() = curFtBible.Search(Unitize(Tokenize(s)))
 
         For i As Integer = 0 To Me.Text.Count - 1
+            For Each c As Condition In conditions
+                If c.Type = "SIMPLE" Then
+                    c.Result = FuncSimple(i, c.Unit1)
+                Else
+                    c.Result = New Result()
+                End If
+            Next
+
             If Search(conditions) Then
                 For Each c As Condition In conditions
                     refs.AddRange(c.Result.References)
@@ -304,25 +314,11 @@ Public Class FullTextBible
     End Function
 
     Public Function Search(conditions As Condition()) As Boolean
-        'TODO: build search string as trues/falses with And, Or, Xor, and Not
-        Dim syntax As New StringBuilder
+        'TODO: calculate total of complex search with And, Or, Xor, and Not
+        Dim status As Boolean = False
 
-        For Each c As Condition In conditions
-            If c.Type.Length <= 3 Then
-                syntax.Append(" " & c.Type)
-            Else
-                syntax.Append(" " & c.Result.Success)
-            End If
-        Next
 
-        Dim script As String = <script>
-                                   If <%= syntax.ToString %> Then
-                                        Return True
-                                   Else
-                                        Return False
-                                   End If
-                               </script>.ToString
-        Return CBool(Compiler.Run(script))
+        Return status
     End Function
 
     Private Function Match(t As Token, w As word, Optional ids As Dictionary(Of Integer, Parsing) = Nothing) As Boolean
@@ -341,7 +337,7 @@ Public Class FullTextBible
         ElseIf t.Type = UnitType.PartOfSpeech Then
             Dim p As PartOfSpeech = t.PartOfSpeech
             Dim found As Boolean = False
-            If w._Type.ToUpper Like "%" & p.Type & "%" Then
+            If w._Type.ToUpper Like "*" & p.Type & "*" Then
                 found = True
                 If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
                     found = w.Parsing.Equals(ids(p.Id))
@@ -375,11 +371,11 @@ Public Class FullTextBible
                 refs.Book = Me.Text(index).Book
                 For i As Integer = 1 To u.Tokens.Count - 1
                     If (i + index) < Me.Text.Count Then
-                        If Match(u.Tokens.First, Me.Text(index + i), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
-                            found = False
-                            Exit For
-                        Else
-                            refs.AddRange(Me.Text(index + i).Chapter, Me.Text(index + i).Verse)
+                    If Not Match(u.Tokens(i), Me.Text(index + i), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
+                        found = False
+                        Exit For
+                    Else
+                        refs.AddRange(Me.Text(index + i).Chapter, Me.Text(index + i).Verse)
                         End If
                     End If
                 Next

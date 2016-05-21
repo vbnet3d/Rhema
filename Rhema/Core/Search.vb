@@ -27,6 +27,45 @@ Imports System.Globalization
 Imports System.Text
 Imports System.Text.RegularExpressions
 
+Public Module Evaluate
+    Public Function [And](c1 As Condition, c2 As Condition) As Boolean
+        If IsNothing(c1.Result) Then Return False
+        If IsNothing(c2.Result) Then Return False
+        If c1.Result.Success And c2.Result.Success Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+    Public Function [Or](c1 As Condition, c2 As Condition) As Boolean
+        If IsNothing(c1.Result) Then Return False
+        If IsNothing(c2.Result) Then Return False
+        If c1.Result.Success Or c2.Result.Success Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+    Public Function [Not](c1 As Condition, c2 As Condition) As Boolean
+        If IsNothing(c1.Result) Then Return False
+        If IsNothing(c2.Result) Then Return False
+        If c1.Result.Success And Not c2.Result.Success Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+    Public Function [Xor](c1 As Condition, c2 As Condition) As Boolean
+        If IsNothing(c1.Result) Then Return False
+        If IsNothing(c2.Result) Then Return False
+        If c1.Result.Success Xor c2.Result.Success Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+End Module
+
 Public Class Result
     Public Success As Boolean = False
     Public References As New List(Of Reference)
@@ -198,6 +237,11 @@ Public Class Unit
         Next
         Return s.ToString.Trim
     End Function
+End Class
+
+Public Class Info
+    Public Success As Boolean
+    Public Conditions As New List(Of Condition)
 End Class
 
 Public Class Condition

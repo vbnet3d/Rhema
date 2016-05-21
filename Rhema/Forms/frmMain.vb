@@ -29,7 +29,7 @@ Imports System.Reflection
 Public Class frmMain
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
-        curFtBible.Search2("εν αρχη ην ο λογος <OR> αυτος <WITHIN 5 WORDS> ανθρωπος")
+        curFtBible.Search2("εν αρχη ην ο λογος <OR> αυτος <WITHIN 5 WORDS> ανθρωπος <OR> [ARTICLE 1] [NOUN 1] και [NOUN 1]")
         cmbBible.Items.AddRange(BibleList.ToArray)
         cmbBible.Text = BibleList.Last
     End Sub
