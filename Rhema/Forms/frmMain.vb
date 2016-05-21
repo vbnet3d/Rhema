@@ -23,9 +23,6 @@
 Option Explicit On
 Option Strict On
 
-Imports System.IO
-Imports System.Reflection
-
 Public Class frmMain
 
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown

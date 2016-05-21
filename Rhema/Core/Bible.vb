@@ -23,8 +23,6 @@
 Option Explicit On
 Option Strict On
 
-Imports System.Text.RegularExpressions
-
 Public Class Book
     Public Property Chapters As New List(Of Chapter)
     Public Property Name As String

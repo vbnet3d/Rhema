@@ -25,7 +25,6 @@ Option Strict On
 
 Imports System.Globalization
 Imports System.Text
-Imports System.Text.RegularExpressions
 
 Public Module Evaluate
     Public Function [And](c1 As Condition, c2 As Condition) As Boolean

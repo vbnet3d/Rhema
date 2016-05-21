@@ -22,7 +22,6 @@ Option Strict On
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Imports System.Text
 Imports System.Text.RegularExpressions
 
 Public Class FullTextBible
