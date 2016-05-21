@@ -52,6 +52,7 @@ Public Class FullTextBible
     Private XorRegex As New Regex([XOR], RegexOptions.Compiled)
     Private NotRegex As New Regex([NOT], RegexOptions.Compiled)
     Private StrongsRegex As New Regex(STRONGS, RegexOptions.Compiled)
+
     '****************************
 
     Public Function ToBible() As Bible
@@ -246,7 +247,9 @@ Public Class FullTextBible
                 If c.Type = "SIMPLE" Then
                     c.Result = FuncSimple(i, c.Unit1)
                 Else
-                    c.Result = New Result() 'TODO: Proximity functions...
+                    Dim b As Boolean = c.Type = "WITHIN" Or c.Type = "PRECEDEDBY"
+                    Dim f As Boolean = c.Type = "WITHIN" Or c.Type = "FOLLOWEDBY"
+                    c.Result = FuncProximity(i, c.Unit1, c.Unit2, CInt(c.Options(0)), f, b)
                 End If
             Next
 
@@ -387,7 +390,6 @@ Public Class FullTextBible
 
         Dim ids As New Dictionary(Of Integer, Parsing)
 
-        'TODO: add id + parsing combos.
         If Match(u.Tokens.First, Me.Text(index), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
             found = True
             Dim p As PartOfSpeech = u.Tokens.First.PartOfSpeech
@@ -395,20 +397,44 @@ Public Class FullTextBible
                 ids.Add(p.Id, Me.Text(index).Parsing)
             End If
             refs.AddRange(Me.Text(index).Chapter, Me.Text(index).Verse)
-                refs.Book = Me.Text(index).Book
-                For i As Integer = 1 To u.Tokens.Count - 1
-                    If (i + index) < Me.Text.Count Then
-                    If Not Match(u.Tokens(i), Me.Text(index + i), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
-                        found = False
-                        Exit For
-                    Else
-                        refs.AddRange(Me.Text(index + i).Chapter, Me.Text(index + i).Verse)
-                        End If
-                    End If
-                Next
-            End If
+            refs.Book = Me.Text(index).Book
 
-            If found Then
+            Dim wordIndex As Integer = 1
+            For i As Integer = 1 To u.Tokens.Count - 1
+                Dim flexibleSearch As Boolean = Globals.FlexibleSearch
+
+                If (wordIndex + index) < Me.Text.Count Then
+                    If u.Tokens(i).Type = UnitType.Expansion Then
+                        flexibleSearch = True
+                    Else
+                        If Not Match(u.Tokens(i), Me.Text(index + wordIndex), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
+                            If flexibleSearch Then
+                                For x As Integer = wordIndex + 1 To wordIndex + 3
+                                    If Match(u.Tokens(i), Me.Text(index + x), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
+                                        found = True
+                                        refs.AddRange(Me.Text(index + wordIndex).Chapter, Me.Text(index + wordIndex).Verse)
+                                        wordIndex = x
+                                        Exit For
+                                    End If
+                                Next
+                                If Not found Then
+                                    Exit For
+                                End If
+                            Else
+                                found = False
+                                Exit For
+                            End If
+                        Else
+                            refs.AddRange(Me.Text(index + wordIndex).Chapter, Me.Text(index + wordIndex).Verse)
+                        End If
+                        wordIndex += 1
+                    End If
+
+                End If
+            Next
+        End If
+
+        If found Then
             res.Success = True
             res.References.Add(refs)
         End If
@@ -417,7 +443,47 @@ Public Class FullTextBible
     End Function
 
     Private Function FuncProximity(index As Integer, x As Unit, y As Unit, dist As Integer, Optional forward As Boolean = True, Optional backward As Boolean = True, Optional unit As String = "WORDS") As Result
-        Dim res As New Result
+        Dim res As Result = FuncSimple(index, x)
+
+        If res.Success Then
+            Dim found_f As Boolean = False
+            Dim found_b As Boolean = False
+            For i = 1 To dist
+                If forward Then
+
+                    If (index + i) < Me.Text.Count Then
+                        Dim tmp As Result = FuncSimple(index + i, y)
+                        If tmp.Success Then
+                            res.References.First.EndChapter = tmp.References.First.StartChapter
+                            res.References.First.EndVerse = tmp.References.First.StartVerse
+                            found_f = True
+                            Exit For
+                        End If
+                    End If
+                End If
+                If backward Then
+                    If (index - i) > 0 Then
+                        Dim tmp As Result = FuncSimple(index - i, y)
+                        If tmp.Success Then
+                            res.References.First.EndChapter = tmp.References.First.StartChapter
+                            res.References.First.EndVerse = tmp.References.First.StartVerse
+                            found_b = True
+                            Exit For
+                        End If
+                    End If
+                End If
+            Next
+            If Not found_f And forward Then
+                If Not found_b Then
+                    res.Success = False
+                End If
+            End If
+            If Not found_b And backward Then
+                If Not found_f Then
+                    res.Success = False
+                End If
+            End If
+        End If
 
 
         Return res

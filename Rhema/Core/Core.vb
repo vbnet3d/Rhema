@@ -26,6 +26,10 @@ Option Strict On
 Imports System.IO
 Imports System.Reflection
 
+Public Module Globals
+    Public FlexibleSearch As Boolean = False
+End Module
+
 Public Module Core
     Public curBible As Bible
     Public curFtBible As FullTextBible
