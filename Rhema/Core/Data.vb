@@ -79,6 +79,8 @@ Public Module BibleData
 
     Public Function Load(s As IO.StreamReader, name As String) As FullTextBible
         Dim contents As New List(Of String)
+        'Dim data As String = s.ReadToEnd
+        's.Close()
         contents.AddRange(s.ReadToEnd.Split(CType(vbCrLf, Char()), StringSplitOptions.RemoveEmptyEntries))
         Return Load(contents.ToArray, name)
     End Function

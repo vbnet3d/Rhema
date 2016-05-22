@@ -1,4 +1,6 @@
-﻿'The MIT License (MIT)
+﻿Option Explicit On
+Option Strict On
+'The MIT License (MIT)
 
 'Copyright(c) 2016 David Dzimianski
 
@@ -20,12 +22,10 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Option Explicit On
-Option Strict On
-
+Imports System.Text
 Imports System.Text.RegularExpressions
 
-Public Module RegexConvert
+Public Module Extensions
 
     <System.Runtime.CompilerServices.Extension>
     Public Function ToAlphaNumericOnly(input As String) As String
@@ -72,6 +72,47 @@ Public Module RegexConvert
             Return 0.0D
         End If
     End Function
+
+    <System.Runtime.CompilerServices.Extension>
+    Public Function ReplaceEx(original As String, pattern As String, replacement As String) As String
+        Return Replace(original, pattern, replacement, StringComparison.CurrentCulture, -1)
+    End Function
+
+    <System.Runtime.CompilerServices.Extension>
+    Public Function ReplaceEx(original As String, pattern As String, replacement As String, comparisonType As StringComparison) As String
+        Return Replace(original, pattern, replacement, comparisonType, -1)
+    End Function
+
+    <System.Runtime.CompilerServices.Extension>
+    Public Function ReplaceEx(original As String, pattern As String, replacement As String, comparisonType As StringComparison, stringBuilderInitialSize As Integer) As String
+        If original Is Nothing Then
+            Return Nothing
+        End If
+
+        If [String].IsNullOrEmpty(pattern) Then
+            Return original
+        End If
+
+
+        Dim posCurrent As Integer = 0
+        Dim lenPattern As Integer = pattern.Length
+        Dim idxNext As Integer = original.IndexOf(pattern, comparisonType)
+        Dim result As New StringBuilder(If(stringBuilderInitialSize < 0, Math.Min(4096, original.Length), stringBuilderInitialSize))
+
+        While idxNext >= 0
+            result.Append(original, posCurrent, idxNext - posCurrent)
+            result.Append(replacement)
+
+            posCurrent = idxNext + lenPattern
+
+            idxNext = original.IndexOf(pattern, posCurrent, comparisonType)
+        End While
+
+        result.Append(original, posCurrent, original.Length - posCurrent)
+
+        Return result.ToString()
+    End Function
+
 
 End Module
 
