@@ -26,8 +26,8 @@ Notes: x and y may be words or other conditions.
  - `x <AND> y` 
  - `x <NOT> y` 
  - `x <XOR> y`
- - `x <FOLLOWED BY distance WORDS> y`
- - `x <PRECEDED BY distance WORDS> y` 
+ - `x <FOLLOWEDBY distance WORDS> y`
+ - `x <PRECEDEDBY distance WORDS> y` 
 
 ## PARTS OF SPEECH ##
 
