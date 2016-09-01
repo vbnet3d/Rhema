@@ -32,7 +32,7 @@
         Initialize()
 
         Me.Hide()
-        Dim f As New frmMain
+        Dim f As New frmWindow
         f.Show()
     End Sub
 

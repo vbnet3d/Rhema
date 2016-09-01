@@ -131,6 +131,12 @@
     <Compile Include="Forms\frmSplash.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\frmWindow.Designer.vb">
+      <DependentUpon>frmWindow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmWindow.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -154,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSplash.resx">
       <DependentUpon>frmSplash.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmWindow.resx">
+      <DependentUpon>frmWindow.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

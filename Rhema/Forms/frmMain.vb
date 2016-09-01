@@ -83,13 +83,14 @@ Public Class frmMain
     End Sub
 
     Private Sub frmMain_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-        If Not IsNothing(Me.ParentForm) Then
-            Me.ParentForm.Close()
-        End If
-        Application.Exit()
+
     End Sub
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+
+    Private Sub txt_TextChanged(sender As Object, e As EventArgs) Handles txt.TextChanged
 
     End Sub
 End Class
