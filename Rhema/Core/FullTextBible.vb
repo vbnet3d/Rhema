@@ -240,7 +240,7 @@ Public Class FullTextBible
     Public Function Search(s As String) As List(Of Reference)
         Dim refs As New List(Of Reference)
 
-        Dim conditions As Condition() = curFtBible.Search(Unitize(Tokenize(s)))
+        Dim conditions As Condition() = Me.Search(Unitize(Tokenize(s)))
 
         For i As Integer = 0 To Me.Text.Count - 1
             For Each c As Condition In conditions

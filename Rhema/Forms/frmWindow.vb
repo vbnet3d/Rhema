@@ -75,6 +75,15 @@ Public Class frmWindow
         ChildForm.Text = "Search"
 
         ChildForm.Show()
+
+        ' Create a new instance of the child form.
+        Dim ChildForm2 As New frmBible
+        ' Make it a child of this MDI form before showing it.
+        ChildForm2.MdiParent = Me
+
+        ChildForm2.Show()
+
+        Me.LayoutMdi(MdiLayout.TileVertical)
     End Sub
 
     Private Sub frmWindow_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
@@ -82,5 +91,30 @@ Public Class frmWindow
             Me.ParentForm.Close()
         End If
         Application.Exit()
+    End Sub
+
+    Private Sub FileMenu_Click(sender As Object, e As EventArgs) Handles FileMenu.Click
+
+    End Sub
+
+    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+        ' Create a new instance of the child form.
+        Dim ChildForm As New frmBible
+        ' Make it a child of this MDI form before showing it.
+        ChildForm.MdiParent = Me
+
+        ChildForm.Show()
+    End Sub
+
+    Private Sub HorizontalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HorizontalToolStripMenuItem.Click
+        Me.LayoutMdi(MdiLayout.TileHorizontal)
+    End Sub
+
+    Private Sub VerticalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VerticalToolStripMenuItem.Click
+        Me.LayoutMdi(MdiLayout.TileVertical)
+    End Sub
+
+    Private Sub CascadeToolStripMenuItem_Click_1(sender As Object, e As EventArgs) Handles CascadeToolStripMenuItem.Click
+        Me.LayoutMdi(MdiLayout.Cascade)
     End Sub
 End Class

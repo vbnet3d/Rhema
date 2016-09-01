@@ -24,42 +24,22 @@ Option Explicit On
 Option Strict On
 
 Public Class frmMain
-
+    Public Property curBible As Bible
+    Public Property curFtBible As FullTextBible
     Private Sub frmMain_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
         'curFtBible.Search2("εν αρχη ην ο λογος <OR> [ARTICLE 1 **S] [NOUN 1] και [NOUN 1]") ' <OR> αυτος <WITHIN 5 WORDS> ανθρωπος <OR> [ARTICLE 1] [NOUN 1] και [NOUN 1]
         cmbBible.Items.AddRange(BibleList.ToArray)
         cmbBible.Text = BibleList.Last
-
+        curBible = Bibles.Last
+        curFtBible = ftBibles.Last
         'Me.Text = "Converting TR"
         'BibleData.ConvertUnboundToRhema("greek_textus_receptus_parsed_utf8.txt", "./bibles/Textus Receptus.bible", "book_names.txt")
         ''Me.Text = "Converting LXX"
         ''BibleData.ConvertUnboundToRhema("lxx_a_parsing_unaccented_utf8.txt", "./bibles/LXX.bible", "book_names.txt")
         ''Application.Exit()
     End Sub
-
-    Private Sub cmbBook_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbBook.SelectedIndexChanged
-        Dim i As Integer
-        cmbChap.Items.Clear()
-        b = curBible.Books(cmbBook.Text)
-        For i = 1 To b.Chapters.Count
-            cmbChap.Items.Add(i)
-        Next
-    End Sub
-
-    Private Sub cmbChap_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbChap.SelectedIndexChanged
-        Dim i As Integer
-        cmbVerse.Items.Clear()
-        For i = 1 To b.Chapters(cmbChap.SelectedIndex).Verse.Count
-            cmbVerse.Items.Add(i)
-        Next
-    End Sub
-
-    Private Sub cmbVerse_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbVerse.SelectedIndexChanged
-        txt.Text = curBible.GetVerseText(cmbBook.Text, cmbChap.SelectedIndex + 1, cmbVerse.SelectedIndex + 1)
-    End Sub
-
-
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        'Try
         Dim search As New System.Text.StringBuilder
         txtSearch.Text = ""
         Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text).ToArray)
@@ -69,6 +49,9 @@ Public Class frmMain
         Next
         txtSearch.Text = search.ToString
         lblResults.Text = l.Count & " Result(s)"
+        'Catch ex As Exception
+        '    MsgBox(ex.Message)
+        'End Try
     End Sub
 
     Private Sub cmbBible_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbBible.SelectedIndexChanged
@@ -76,21 +59,7 @@ Public Class frmMain
             If ftBibles(i).Name = cmbBible.Text Then
                 curFtBible = ftBibles(i)
                 curBible = Bibles(i)
-                cmbBook.Items.Clear()
-                cmbBook.Items.AddRange(curBible.BookList())
             End If
         Next
-    End Sub
-
-    Private Sub frmMain_Closed(sender As Object, e As EventArgs) Handles Me.Closed
-
-    End Sub
-
-    Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
-
-    Private Sub txt_TextChanged(sender As Object, e As EventArgs) Handles txt.TextChanged
-
     End Sub
 End Class

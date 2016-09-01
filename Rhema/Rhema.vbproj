@@ -118,6 +118,12 @@
     <Compile Include="Core\FullTextBible.vb" />
     <Compile Include="Core\Lexicon.vb" />
     <Compile Include="Core\Search.vb" />
+    <Compile Include="Forms\frmBible.Designer.vb">
+      <DependentUpon>frmBible.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmBible.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +161,9 @@
     <Compile Include="Core\Word.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\frmBible.resx">
+      <DependentUpon>frmBible.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>

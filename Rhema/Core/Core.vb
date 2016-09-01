@@ -31,8 +31,7 @@ Public Module Globals
 End Module
 
 Public Module Core
-    Public curBible As Bible
-    Public curFtBible As FullTextBible
+
     Public ftBibles As New List(Of FullTextBible)
     Public Lexicon As Lexicon
     Public Bibles As New List(Of Bible)
@@ -86,7 +85,6 @@ Public Module Core
         End Try
 
 
-        curBible = Bibles.Last
-        curFtBible = ftBibles.Last
+
     End Sub
 End Module
