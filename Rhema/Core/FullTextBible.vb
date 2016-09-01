@@ -247,9 +247,13 @@ Public Class FullTextBible
                 If c.Type = "SIMPLE" Then
                     c.Result = FuncSimple(i, c.Unit1)
                 Else
-                    Dim b As Boolean = c.Type = "WITHIN" Or c.Type = "PRECEDEDBY"
-                    Dim f As Boolean = c.Type = "WITHIN" Or c.Type = "FOLLOWEDBY"
-                    c.Result = FuncProximity(i, c.Unit1, c.Unit2, CInt(c.Options(0)), f, b)
+                    Try
+                        Dim b As Boolean = c.Type = "WITHIN" Or c.Type = "PRECEDEDBY"
+                        Dim f As Boolean = c.Type = "WITHIN" Or c.Type = "FOLLOWEDBY"
+                        c.Result = FuncProximity(i, c.Unit1, c.Unit2, CInt(c.Options(0)), f, b)
+                    Catch ex As Exception
+                        Throw New Exception(String.Format("Invalid search syntax: {0} is not recognized or is in the wrong format.", c.Type))
+                    End Try
                 End If
             Next
 
