@@ -63,6 +63,7 @@ Public Module Core
                     Dim fb As FullTextBible = BibleData.Load(_s, name)
                     Bibles.Add(fb.ToBible)
                     ftBibles.Add(fb)
+                    BibleList.Add(fb.Name)
                 End Using
             End If
         Next
