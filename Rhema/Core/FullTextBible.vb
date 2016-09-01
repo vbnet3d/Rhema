@@ -361,22 +361,22 @@ Public Class FullTextBible
         ElseIf t.Type = UnitType.PartOfSpeech Then
                 Dim p As PartOfSpeech = t.PartOfSpeech
                 Dim found As Boolean = False
-                'TODO: Add "wildcard" types
-                If w._Type.ToUpper Like "*" & p.Type & "*" Then
-                    found = True
-                    If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
-                        If Not IsNothing(p.Parsing) Then
-                            found = p.Parsing.Equals(w.Parsing) And w.Parsing.Equals(ids(p.Id))
-                        Else
-                            found = w.Parsing.Equals(ids(p.Id))
-                        End If
+            'TODO: Add "wildcard" types
+            If w._Type.ToUpper Like p.Type & "*" Then
+                found = True
+                If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
+                    If Not IsNothing(p.Parsing) Then
+                        found = p.Parsing.Equals(w.Parsing) And w.Parsing.Equals(ids(p.Id))
                     Else
-                        If Not IsNothing(p.Parsing) Then
-                            found = p.Parsing.Equals(w.Parsing)
-                        End If
+                        found = w.Parsing.Equals(ids(p.Id))
+                    End If
+                Else
+                    If Not IsNothing(p.Parsing) Then
+                        found = p.Parsing.Equals(w.Parsing)
                     End If
                 End If
-                Return found
+            End If
+            Return found
             Else
                 Return False
         End If

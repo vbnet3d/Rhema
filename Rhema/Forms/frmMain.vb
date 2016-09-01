@@ -32,9 +32,9 @@ Public Class frmMain
 
         'Me.Text = "Converting TR"
         'BibleData.ConvertUnboundToRhema("greek_textus_receptus_parsed_utf8.txt", "./bibles/Textus Receptus.bible", "book_names.txt")
-        'Me.Text = "Converting LXX"
-        'BibleData.ConvertUnboundToRhema("lxx_a_parsing_unaccented_utf8.txt", "./bibles/LXX.bible", "book_names.txt")
-        'Application.Exit()
+        ''Me.Text = "Converting LXX"
+        ''BibleData.ConvertUnboundToRhema("lxx_a_parsing_unaccented_utf8.txt", "./bibles/LXX.bible", "book_names.txt")
+        ''Application.Exit()
     End Sub
 
     Private Sub cmbBook_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbBook.SelectedIndexChanged
