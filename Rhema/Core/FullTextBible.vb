@@ -353,32 +353,32 @@ Public Class FullTextBible
                 Return False
             End If
         ElseIf t.Type = UnitType.Strongs Then
-            If t.StrongsNumber = w.StrongsNumber Then
+            If w.StrongsNumber.Contains(t.StrongsNumber) Then
                 Return True
             Else
                 Return False
             End If
         ElseIf t.Type = UnitType.PartOfSpeech Then
-            Dim p As PartOfSpeech = t.PartOfSpeech
-            Dim found As Boolean = False
-            'TODO: Add "wildcard" types
-            If w._Type.ToUpper Like "*" & p.Type & "*" Then
-                found = True
-                If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
-                    If Not IsNothing(p.Parsing) Then
-                        found = p.Parsing.Equals(w.Parsing) And w.Parsing.Equals(ids(p.Id))
+                Dim p As PartOfSpeech = t.PartOfSpeech
+                Dim found As Boolean = False
+                'TODO: Add "wildcard" types
+                If w._Type.ToUpper Like "*" & p.Type & "*" Then
+                    found = True
+                    If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
+                        If Not IsNothing(p.Parsing) Then
+                            found = p.Parsing.Equals(w.Parsing) And w.Parsing.Equals(ids(p.Id))
+                        Else
+                            found = w.Parsing.Equals(ids(p.Id))
+                        End If
                     Else
-                        found = w.Parsing.Equals(ids(p.Id))
-                    End If
-                Else
-                    If Not IsNothing(p.Parsing) Then
-                        found = p.Parsing.Equals(w.Parsing)
+                        If Not IsNothing(p.Parsing) Then
+                            found = p.Parsing.Equals(w.Parsing)
+                        End If
                     End If
                 End If
-            End If
-            Return found
-        Else
-            Return False
+                Return found
+            Else
+                Return False
         End If
     End Function
 

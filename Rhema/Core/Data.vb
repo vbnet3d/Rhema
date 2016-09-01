@@ -44,8 +44,8 @@ Public Module BibleData
                 w.Chapter = Convert.ToInt32(data(1))
                 w.Verse = Convert.ToInt32(data(2))
                 w._Text = data(3)
-                w.StrongsNumber = data(4)
-                w._Strongs = {data(4)}
+                w.StrongsNumber.AddRange(data(4).Split(CType("|", Char())))
+                w._Strongs = data(4).Split(CType("|", Char()))
                 w._Gender = data(5)
                 w._Number = data(6)
                 w._Case = data(7)
@@ -133,14 +133,14 @@ Public Module BibleData
                                             w.WriteLine(String.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}{0}{10}{0}{11}{0}{12}{0}{13}",
                                                                       separator, entry.Book,
                                                                       entry.Chapter, entry.Verse,
-                                                                      entry.Word, entry.Strongs,
+                                                                      entry.Word, String.Join("|", entry.Strongs.ToArray()),
                                                                       entry.Gender, entry.Number,
                                                                       entry.Case, entry.Tense,
                                                                       entry.Mood, entry.Voice,
                                                                       entry.Person, entry.Part))
                                         End If
 
-                                        entry.Strongs = ""
+                                        entry.Strongs = New List(Of String)
                                         entry.Case = ""
                                         entry.Gender = ""
                                         entry.Number = ""
@@ -161,7 +161,7 @@ Public Module BibleData
                                         End If
 
                                     ElseIf StrongsRegex.IsMatch(t) Then
-                                        entry.Strongs = t
+                                        entry.Strongs.Add(t)
                                     Else
                                         Parse(t, entry)
                                     End If
@@ -181,7 +181,7 @@ Public Module BibleData
     End Sub
 
     Private Sub Parse(Parsing As String, ByVal entry As EntryData)
-        If entry.Strongs = "" Then
+        If entry.Strongs.Count = 0 Then
             Parsing = Parsing.Replace("--", "-")
             Dim parts() As String = Parsing.Split(CType("-", Char()))
 
@@ -312,7 +312,7 @@ Public Class EntryData
     Public Chapter As Integer
     Public Verse As Integer
     Public Word As String
-    Public Strongs As String
+    Public Strongs As List(Of String)
     Public Gender As String
     Public Number As String
     Public [Case] As String
@@ -321,4 +321,8 @@ Public Class EntryData
     Public Mood As String
     Public Person As String
     Public Part As String
+
+    Public Sub New()
+        Strongs = New List(Of String)
+    End Sub
 End Class

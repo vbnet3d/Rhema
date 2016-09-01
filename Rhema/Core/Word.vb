@@ -40,13 +40,13 @@ Public Class word
     Public _Indeclinable As Boolean
     Public _Strongs() As String
     Public _Person As String
-    Public StrongsNumber As String = ""
+    Public StrongsNumber As List(Of String)
     Public Book As String
     Public Chapter As Integer
     Public Verse As Integer
 
     Public Sub New()
-
+        StrongsNumber = New List(Of String)
     End Sub
 
     Public Function Parsing() As Parsing
@@ -67,7 +67,7 @@ Public Class word
         Dim i As Integer
         If Not IsNothing(_Strongs) Then
             For i = 0 To _Strongs.Length - 1
-                StrongsNumber &= _Strongs(i)
+                StrongsNumber.Add(_Strongs(i))
             Next
         End If
 
