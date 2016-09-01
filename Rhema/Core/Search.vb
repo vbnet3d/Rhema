@@ -159,7 +159,7 @@ Public Class PartOfSpeech
     Public Sub New(s As String)
         s = s.Replace("[", "").Replace("]", "")
         Dim data() As String = s.Split(CType(" ", Char()))
-        Type = data(0)
+        Type = data(0).ToUpper()
         For i = 1 To data.Length - 1
             If IsNumeric(data(i)) Then
                 id = CInt(data(i))
