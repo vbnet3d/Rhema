@@ -264,6 +264,8 @@ Public Class FullTextBible
             End If
         Next
 
+        refs = refs.Distinct(New ReferenceEqualityComparer).ToList()
+
         Return refs
     End Function
 

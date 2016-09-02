@@ -1,4 +1,6 @@
-﻿'The MIT License (MIT)
+﻿Option Explicit On
+Option Strict On
+'The MIT License (MIT)
 
 'Copyright(c) 2016 David Dzimianski
 
@@ -20,8 +22,7 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Option Explicit On
-Option Strict On
+Imports Rhema
 
 Public Class Book
     Public Property Chapters As New List(Of Chapter)
@@ -127,6 +128,21 @@ Public Class Bible
     End Function
 End Class
 
+Public Class ReferenceEqualityComparer
+    Implements IEqualityComparer(Of Reference)
+
+    Public Function Equals1(x As Reference, y As Reference) As Boolean Implements IEqualityComparer(Of Reference).Equals
+        Return x.Equals(y)
+    End Function
+
+    Public Function GetHashCode1(obj As Reference) As Integer Implements IEqualityComparer(Of Reference).GetHashCode
+        Return StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj.Book) _
+           Xor StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj.StartChapter) _
+           Xor StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj.EndChapter) _
+           Xor StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj.StartVerse) _
+           Xor StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj.EndVerse)
+    End Function
+End Class
 Public Class Reference
     Public Book As String
     Public StartChapter As Integer
