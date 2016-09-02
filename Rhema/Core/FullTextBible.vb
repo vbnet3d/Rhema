@@ -366,7 +366,7 @@ Public Class FullTextBible
                 Dim p As PartOfSpeech = t.PartOfSpeech
                 Dim found As Boolean = False
             'TODO: Add "wildcard" types
-            If w._Type.ToUpper Like p.Type & "*" Then
+            If w._Type.ToUpper Like p.Type & "*" OrElse PartOfSpeechCategory.InCategory(p.Type, w._Type.ToUpper) Then
                 found = True
                 If Not IsNothing(ids) AndAlso ids.ContainsKey(p.Id) Then
                     If Not IsNothing(p.Parsing) Then

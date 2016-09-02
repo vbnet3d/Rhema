@@ -151,6 +151,39 @@ Public Class Parsing
     End Function
 End Class
 
+Public Module PartOfSpeechCategory
+
+    Private Categories As New Dictionary(Of String, String()) _
+    From {
+        {"SUBSTANTIVE", {"NOUN", "PRONOUN", "REFLEXIVE", "INDEFINITE", "NUMBER", "PARTICIPLE", "ADJECTIVE", "PROPER NAME"}},
+        {"ANYPRONOUN", {"PRONOUN", "REFLEXIVE", "INDEFINITE"}},
+        {"FUNCTION", {"CONJUNCTION", "PARTICLE", "PREPOSITION", ""}},
+        {"VERB", {"VERB", "INFINITIVE", "PARTICIPLE"}}
+    }
+
+
+    '[ANY id parsing] Matches any word unit
+    '[ARTICLE id parsing] Matches any article
+    '[SUBSTANTIVE id parsing] Matches any substantive word unit
+    '[NOUN id parsing] Matches any noun
+    '[ANYPRONOUN id parsing] Matches any pronoun
+    '[PRONOUN id parsing] Matches only regular pronouns
+    '[REFLEXIVE id parsing] Matches only reflexive pronouns
+    '[INDEFINITE id parsing] Matches only indefinite pronouns
+    '[NUMBER id parsing] Matches only indeclinable numbers
+    '[PARTICLE id parsing] Matches only particles
+    '[VERB id parsing] Matches only verbs
+
+    Public Function InCategory(type As String, part As String) As Boolean
+        If type = "ANY" Then Return True
+
+        If Categories.ContainsKey(type) Then
+            If Categories(type).Contains(part) Then Return True
+        End If
+
+        Return False
+    End Function
+End Module
 Public Class PartOfSpeech
     Public Type As String
     Public Id As Integer = -1
