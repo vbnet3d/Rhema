@@ -161,19 +161,6 @@ Public Module PartOfSpeechCategory
         {"VERB", {"VERB", "INFINITIVE", "PARTICIPLE"}}
     }
 
-
-    '[ANY id parsing] Matches any word unit
-    '[ARTICLE id parsing] Matches any article
-    '[SUBSTANTIVE id parsing] Matches any substantive word unit
-    '[NOUN id parsing] Matches any noun
-    '[ANYPRONOUN id parsing] Matches any pronoun
-    '[PRONOUN id parsing] Matches only regular pronouns
-    '[REFLEXIVE id parsing] Matches only reflexive pronouns
-    '[INDEFINITE id parsing] Matches only indefinite pronouns
-    '[NUMBER id parsing] Matches only indeclinable numbers
-    '[PARTICLE id parsing] Matches only particles
-    '[VERB id parsing] Matches only verbs
-
     Public Function InCategory(type As String, part As String) As Boolean
         If type = "ANY" Then Return True
 
