@@ -42,13 +42,14 @@ Public Class frmMain
         Try
             Dim search As New System.Text.StringBuilder
             txtSearch.Text = ""
-            Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text).ToArray)
+
+            Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text, cmbStart.SelectedIndex, cmbEnd.SelectedIndex).ToArray)
             Dim i As Integer
             For i = 0 To l.Count - 1
                 search.Append(l(i).Book & " " & (l(i).Chapter) & ":" & (l(i).Verse) & " " & l(i).RawText & vbCrLf)
             Next
             txtSearch.Text = search.ToString
-            lblResults.Text = l.Count & " Result(s)"
+            Me.Text = String.Format("Search - {0} : {1} Result(s)", GreekText1.Text, l.Count)
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
@@ -61,5 +62,20 @@ Public Class frmMain
                 curBible = Bibles(i)
             End If
         Next
+
+
+        cmbStart.Items.Clear()
+        For Each b As String In curBible.BookList
+            cmbStart.Items.Add(b)
+            cmbEnd.Items.Add(b)
+        Next
+
+        cmbStart.SelectedIndex = 0
+        cmbEnd.SelectedIndex = cmbEnd.Items.Count - 1
+
+    End Sub
+
+    Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
     End Sub
 End Class

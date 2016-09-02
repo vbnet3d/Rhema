@@ -95,6 +95,7 @@ Public Class GreekText
         ld.Add(ChrW(106), ChrW(968))
         ld.Add(ChrW(119), ChrW(969))
 
+        Language = Language.Greek
     End Sub
 
     Protected Overrides Sub OnKeyPress(ByVal e As System.Windows.Forms.KeyPressEventArgs)
@@ -115,9 +116,16 @@ Public Class GreekText
         Next
 
         If Not skip Then
-            If ld.ContainsKey(e.KeyChar) Then
-                e.KeyChar = ld(e.KeyChar)
-            End If
+            Select Case Language
+                Case Language.English
+                    ' Do nothing
+                Case Language.Greek
+                    If ld.ContainsKey(e.KeyChar) Then
+                        e.KeyChar = ld(e.KeyChar)
+                    End If
+                Case Language.Hebrew
+                    Throw New NotImplementedException
+            End Select
         Else
             e.KeyChar = Char.ToUpper(e.KeyChar)
         End If

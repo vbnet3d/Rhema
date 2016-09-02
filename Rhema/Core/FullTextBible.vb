@@ -28,6 +28,7 @@ Public Class FullTextBible
     Public Text As New List(Of word)
     Public Name As String
     Public Language As Language
+    Private BookIndex As New Dictionary(Of Integer, Integer)
     Private Code As String
     Private infoList As New List(Of Info)
 
@@ -57,10 +58,14 @@ Public Class FullTextBible
 
     Public Function ToBible() As Bible
         Dim b As New Bible(Me.Name)
+        Dim bc As Integer = 0
+        Dim wc As Integer = 0
         For Each w As word In Me.Text
             If Not b.Books.ContainsKey(w.Book) Then
                 Dim bk As New Book(w.Book)
                 b.Books.Add(w.Book, bk)
+                Me.BookIndex.Add(bc, wc)
+                bc += 1
             End If
             If Not b.Books(w.Book).Chapters.Count >= w.Chapter Then
                 b.Books(w.Book).Chapters.Add(New Chapter)
@@ -88,6 +93,7 @@ Public Class FullTextBible
                 b.Books(w.Book).Chapters(w.Chapter - 1).Verse.Add(v)
             End If
 
+            wc += 1
         Next
         Return b
     End Function
@@ -237,12 +243,20 @@ Public Class FullTextBible
         Return con
     End Function
 
-    Public Function Search(s As String) As List(Of Reference)
+    Public Function Search(s As String, start As Integer, [end] As Integer) As List(Of Reference)
         Dim refs As New List(Of Reference)
+
+        start = Me.BookIndex(start)
+        If [end] = Me.BookIndex.Last.Key Then
+            [end] = Me.Text.Count - 1
+        Else
+            [end] = Me.BookIndex([end] + 1) - 1
+        End If
+
 
         Dim conditions As Condition() = Me.Search(Unitize(Tokenize(s)))
 
-        For i As Integer = 0 To Me.Text.Count - 1
+        For i As Integer = start To [end]
             For Each c As Condition In conditions
                 If c.Type = "SIMPLE" Then
                     c.Result = FuncSimple(i, c.Unit1)
@@ -267,6 +281,10 @@ Public Class FullTextBible
         refs = refs.Distinct(New ReferenceEqualityComparer).ToList()
 
         Return refs
+    End Function
+    Public Function Search(s As String) As List(Of Reference)
+        ' Search the whole corpus
+        Return Search(s, 0, Me.BookIndex.Count - 1)
     End Function
 
     Public Function Search(units As Unit()) As Condition()

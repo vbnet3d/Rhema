@@ -29,12 +29,14 @@ Partial Class frmMain
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cmbBible = New System.Windows.Forms.ComboBox()
         Me.GreekText1 = New Rhema.GreekText()
+        Me.cmbStart = New System.Windows.Forms.ComboBox()
+        Me.cmbEnd = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'Button1
         '
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(450, 33)
+        Me.Button1.Location = New System.Drawing.Point(493, 33)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 26)
         Me.Button1.TabIndex = 7
@@ -51,13 +53,13 @@ Partial Class frmMain
         Me.txtSearch.Multiline = True
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtSearch.Size = New System.Drawing.Size(518, 275)
+        Me.txtSearch.Size = New System.Drawing.Size(561, 275)
         Me.txtSearch.TabIndex = 8
         '
         'lblResults
         '
         Me.lblResults.AutoSize = True
-        Me.lblResults.Location = New System.Drawing.Point(447, 14)
+        Me.lblResults.Location = New System.Drawing.Point(487, 11)
         Me.lblResults.Name = "lblResults"
         Me.lblResults.Size = New System.Drawing.Size(0, 13)
         Me.lblResults.TabIndex = 10
@@ -86,15 +88,33 @@ Partial Class frmMain
         Me.GreekText1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GreekText1.Location = New System.Drawing.Point(7, 33)
         Me.GreekText1.Name = "GreekText1"
-        Me.GreekText1.Size = New System.Drawing.Size(437, 26)
+        Me.GreekText1.Size = New System.Drawing.Size(480, 26)
         Me.GreekText1.TabIndex = 6
+        '
+        'cmbStart
+        '
+        Me.cmbStart.FormattingEnabled = True
+        Me.cmbStart.Location = New System.Drawing.Point(241, 6)
+        Me.cmbStart.Name = "cmbStart"
+        Me.cmbStart.Size = New System.Drawing.Size(121, 21)
+        Me.cmbStart.TabIndex = 13
+        '
+        'cmbEnd
+        '
+        Me.cmbEnd.FormattingEnabled = True
+        Me.cmbEnd.Location = New System.Drawing.Point(366, 6)
+        Me.cmbEnd.Name = "cmbEnd"
+        Me.cmbEnd.Size = New System.Drawing.Size(121, 21)
+        Me.cmbEnd.TabIndex = 14
         '
         'frmMain
         '
         Me.AcceptButton = Me.Button1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(537, 352)
+        Me.ClientSize = New System.Drawing.Size(580, 352)
+        Me.Controls.Add(Me.cmbEnd)
+        Me.Controls.Add(Me.cmbStart)
         Me.Controls.Add(Me.cmbBible)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lblResults)
@@ -114,4 +134,6 @@ Partial Class frmMain
     Friend WithEvents lblResults As System.Windows.Forms.Label
     Friend WithEvents Label1 As Label
     Friend WithEvents cmbBible As ComboBox
+    Friend WithEvents cmbStart As ComboBox
+    Friend WithEvents cmbEnd As ComboBox
 End Class
