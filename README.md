@@ -49,7 +49,18 @@ Notes: x and y may be words or other conditions.
  - `[INDEFINITE id parsing]`    Matches only indefinite pronouns
  - `[NUMBER id parsing]`        Matches only indeclinable numbers
  - `[PARTICLE id parsing]`      Matches only particles
- - `[VERB id parsing]`          Matches only verbs
+ - `[VERB id parsing]`          Matches verbs (including participle & infinitive)
+ - `[INFINITIVE id parsing]`    Matches only infinitives
+ - `[PARTICIPLE id parsing]`    Matches only participles
+ - `[FUNCTION id parsing]`      Matches all function words
+ - `[PROPERNAME id parsing]`    Matches proper names
+
+---
+EXAMPLE:
+
+Sometimes, such as in the Granville Sharp rule, you need to include more than one type of word in your search.
+
+While `[ARTICLE 1] [NOUN 1] και [NOUN 1]` returns 148 results, this only gives words classified as NOUN. The Granville Sharp rule, however, includes all words that are SUBSTANTIVE. So instead you would search using `[ARTICLE 1] [SUBSTANTIVE 1] και [SUBSTANTIVE 1]`, which returns 685 results.
 
 ---
 ###Parsing Options:###
