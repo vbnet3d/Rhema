@@ -307,7 +307,7 @@ Public Class FullTextBible
                     Dim z As Integer = 1
 
                     While conditions(x - y).Collated And (x - y) > 0
-                        y -= 1
+                        y += 1
                     End While
                     While conditions(x + z).Collated And (x + z) < conditions.Count
                         z += 1
