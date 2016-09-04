@@ -319,58 +319,61 @@ Public Class FullTextBible
                                 conditions(x).Result = New Result
                                 conditions(x).Result.Success = True
                                 Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
-                                conditions(x).Result.References.AddRange(l)
+                                conditions(x).Result.References.AddRange(l.Distinct(New ReferenceEqualityComparer).ToList())
                                 conditions(x - y).Result.References.Clear()
                                 conditions(x + z).Result.References.Clear()
                                 conditions(x - y).Collated = True
                                 conditions(x + z).Collated = True
-
                             End If
                         Case "OR"
-                            If conditions(x - 1).Result.Success OrElse conditions(x + 1).Result.Success Then
+                            If conditions(x - y).Result.Success OrElse conditions(x + z).Result.Success Then
                                 conditions(x).Result = New Result
                                 conditions(x).Result.Success = True
 
-                                If conditions(x - 1).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x - 1).Result.References)
+                                If conditions(x - y).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x - y).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
                                 End If
-                                If conditions(x + 1).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x + 1).Result.References)
+                                If conditions(x + z).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x + z).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
                                 End If
 
-                                conditions(x - 1).Result.References.Clear()
-                                conditions(x + 1).Result.References.Clear()
+                                conditions(x - y).Result.References.Clear()
+                                conditions(x + z).Result.References.Clear()
+                                conditions(x - y).Collated = True
+                                conditions(x + z).Collated = True
                             End If
                         Case "XOR"
-                            If conditions(x - 1).Result.Success Xor conditions(x + 1).Result.Success Then
+                            If conditions(x - y).Result.Success Xor conditions(x + z).Result.Success Then
                                 conditions(x).Result = New Result
                                 conditions(x).Result.Success = True
 
-                                If conditions(x - 1).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x - 1).Result.References)
+                                If conditions(x - y).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x - y).Result.References)
                                 End If
-                                If conditions(x + 1).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x + 1).Result.References)
+                                If conditions(x + z).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x + z).Result.References)
                                 End If
 
-                                conditions(x - 1).Result.References.Clear()
-                                conditions(x + 1).Result.References.Clear()
+                                conditions(x - y).Result.References.Clear()
+                                conditions(x + z).Result.References.Clear()
+                                conditions(x - y).Collated = True
+                                conditions(x + z).Collated = True
                             End If
                         Case "NOT"
-                            If conditions(x - 1).Result.Success And Not conditions(x + 1).Result.Success Then
-                                conditions(x).Result = New Result
+                            conditions(x).Result = New Result
                                 conditions(x).Result.Success = True
 
-                                If conditions(x - 1).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x - 1).Result.References)
-                                End If
-                                If Not conditions(x + 1).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x + 1).Result.References)
-                                End If
+                                Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
 
-                                conditions(x - 1).Result.References.Clear()
-                                conditions(x + 1).Result.References.Clear()
-                            End If
+                            conditions(x).Result.References.AddRange(conditions(x - y).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
+                            For Each r As Reference In l
+                                    conditions(x).Result.References.Remove(r)
+                                Next
+
+                                conditions(x - y).Result.References.Clear()
+                                conditions(x + z).Result.References.Clear()
+                                conditions(x - y).Collated = True
+                            conditions(x + z).Collated = True
                     End Select
                 End If
             End If
