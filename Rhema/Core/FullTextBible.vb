@@ -284,10 +284,11 @@ Public Class FullTextBible
                     End Try
                 End If
 
+                If IsNothing(c.Result) Then
+                    c.Result = New Result
+                End If
+
                 If res.Success Then
-                    If IsNothing(c.Result) Then
-                        c.Result = New Result
-                    End If
                     If Not c.Result.Success Then
                         c.Result.Success = res.Success
                     End If
@@ -315,57 +316,43 @@ Public Class FullTextBible
 
                     Select Case conditions(x).Type
                         Case "AND"
-                            If Evaluate.And(conditions(x - y), conditions(x + z)) Then
-                                conditions(x).Result = New Result
-                                conditions(x).Result.Success = True
-                                Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
-                                conditions(x).Result.References.AddRange(l.Distinct(New ReferenceEqualityComparer).ToList())
-                                conditions(x - y).Result.References.Clear()
-                                conditions(x + z).Result.References.Clear()
-                                conditions(x - y).Collated = True
-                                conditions(x + z).Collated = True
-                            End If
+
+                            conditions(x).Result = New Result
+                            conditions(x).Result.Success = True
+                            Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
+                            conditions(x).Result.References.AddRange(l.Distinct(New ReferenceEqualityComparer).ToList())
+                            conditions(x - y).Result.References.Clear()
+                            conditions(x + z).Result.References.Clear()
+                            conditions(x - y).Collated = True
+                            conditions(x + z).Collated = True
                         Case "OR"
-                            If conditions(x - y).Result.Success OrElse conditions(x + z).Result.Success Then
-                                conditions(x).Result = New Result
-                                conditions(x).Result.Success = True
 
-                                If conditions(x - y).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x - y).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
-                                End If
-                                If conditions(x + z).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x + z).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
-                                End If
+                            conditions(x).Result = New Result
+                            conditions(x).Result.Success = True
 
-                                conditions(x - y).Result.References.Clear()
-                                conditions(x + z).Result.References.Clear()
-                                conditions(x - y).Collated = True
-                                conditions(x + z).Collated = True
+                            If conditions(x - y).Result.Success Then
+                                conditions(x).Result.References.AddRange(conditions(x - y).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
                             End If
+                            If conditions(x + z).Result.Success Then
+                                conditions(x).Result.References.AddRange(conditions(x + z).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
+                            End If
+
+                            conditions(x - y).Result.References.Clear()
+                            conditions(x + z).Result.References.Clear()
+                            conditions(x - y).Collated = True
+                            conditions(x + z).Collated = True
+
                         Case "XOR"
-                            If conditions(x - y).Result.Success Xor conditions(x + z).Result.Success Then
-                                conditions(x).Result = New Result
-                                conditions(x).Result.Success = True
-
-                                If conditions(x - y).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x - y).Result.References)
-                                End If
-                                If conditions(x + z).Result.Success Then
-                                    conditions(x).Result.References.AddRange(conditions(x + z).Result.References)
-                                End If
-
-                                conditions(x - y).Result.References.Clear()
-                                conditions(x + z).Result.References.Clear()
-                                conditions(x - y).Collated = True
-                                conditions(x + z).Collated = True
-                            End If
-                        Case "NOT"
                             conditions(x).Result = New Result
                                 conditions(x).Result.Success = True
 
                                 Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
 
-                            conditions(x).Result.References.AddRange(conditions(x - y).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
+                            conditions(x).Result.References.AddRange(conditions(x - y).Result.References)
+                            conditions(x).Result.References.AddRange(conditions(x + z).Result.References)
+
+                            conditions(x).Result.References = conditions(x).Result.References.Distinct(New ReferenceEqualityComparer).ToList()
+
                             For Each r As Reference In l
                                     conditions(x).Result.References.Remove(r)
                                 Next
@@ -373,6 +360,22 @@ Public Class FullTextBible
                                 conditions(x - y).Result.References.Clear()
                                 conditions(x + z).Result.References.Clear()
                                 conditions(x - y).Collated = True
+                                conditions(x + z).Collated = True
+
+                        Case "NOT"
+                            conditions(x).Result = New Result
+                            conditions(x).Result.Success = True
+
+                            Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
+
+                            conditions(x).Result.References.AddRange(conditions(x - y).Result.References.Distinct(New ReferenceEqualityComparer).ToList())
+                            For Each r As Reference In l
+                                conditions(x).Result.References.Remove(r)
+                            Next
+
+                            conditions(x - y).Result.References.Clear()
+                            conditions(x + z).Result.References.Clear()
+                            conditions(x - y).Collated = True
                             conditions(x + z).Collated = True
                     End Select
                 End If
@@ -480,7 +483,7 @@ Public Class FullTextBible
 
     Private Function Match(t As Token, w As word, Optional ids As Dictionary(Of Integer, Parsing) = Nothing) As Boolean
         If t.Type = UnitType.Literal Then
-            If t.Raw = w._Text Then
+            If t.Raw.ToLower = w._Text.ToLower Then
                 Return True
             Else
                 Return False
