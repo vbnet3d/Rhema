@@ -22,6 +22,7 @@ Partial Class frmBible
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmBible))
         Me.cmbBible = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cmbVerse = New System.Windows.Forms.ComboBox()
@@ -95,6 +96,7 @@ Partial Class frmBible
         Me.Controls.Add(Me.cmbChap)
         Me.Controls.Add(Me.cmbBook)
         Me.Controls.Add(Me.txt)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmBible"
         Me.Text = "Bible"
         Me.ResumeLayout(False)
