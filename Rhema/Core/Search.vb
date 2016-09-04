@@ -271,6 +271,7 @@ Public Class Condition
     Public Y As String 'TODO: Deprecated. Replace with Unit
     Public Options As New List(Of String)
     Public Result As Result
+    Public Collated As Boolean
 
     Public Overrides Function ToString() As String
         Dim str As New StringBuilder(Type)

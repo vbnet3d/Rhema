@@ -39,20 +39,17 @@ Public Class frmMain
         ''Application.Exit()
     End Sub
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-        Try
-            Dim search As New System.Text.StringBuilder
-            txtSearch.Text = ""
+        Dim search As New System.Text.StringBuilder
+        txtSearch.Text = ""
 
-            Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text, cmbStart.SelectedIndex, cmbEnd.SelectedIndex).ToArray)
-            Dim i As Integer
-            For i = 0 To l.Count - 1
-                search.Append(l(i).Book & " " & (l(i).Chapter) & ":" & (l(i).Verse) & " " & l(i).RawText & vbCrLf)
-            Next
-            txtSearch.Text = search.ToString
+        Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text, cmbStart.SelectedIndex, cmbEnd.SelectedIndex).ToArray)
+        Dim i As Integer
+        For i = 0 To l.Count - 1
+            search.Append(l(i).Book & " " & (l(i).Chapter) & ":" & (l(i).Verse) & " " & l(i).RawText & vbCrLf)
+        Next
+        txtSearch.Text = search.ToString
             Me.Text = String.Format("Search - {0} : {1} Result(s)", GreekText1.Text, l.Count)
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
+
     End Sub
 
     Private Sub cmbBible_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbBible.SelectedIndexChanged

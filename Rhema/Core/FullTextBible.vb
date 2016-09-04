@@ -47,6 +47,7 @@ Public Class FullTextBible
     'REGEX Object Definitions
     '****************************
     Private CommandRegex As New Regex("<[WFP][IOR][TLE][A-Za-z0-9 ]*>", RegexOptions.Compiled)
+    Private ComplexRegex As New Regex("<[^GH][A-Za-z0-9 ]*>", RegexOptions.Compiled)
     Private WithinRegex As New Regex(WITHIN, RegexOptions.Compiled)
     Private OrRegex As New Regex([OR], RegexOptions.Compiled)
     Private AndRegex As New Regex([AND], RegexOptions.Compiled)
@@ -233,6 +234,8 @@ Public Class FullTextBible
                 con.Type = "FOLLOWEDBY"
             Case "P"
                 con.Type = "PRECEDEDBY"
+            Case Else
+                con.Type = s
         End Select
         Dim data() As String = s.Split(CType(" ", Char()))
         For Each d As String In data
@@ -258,23 +261,126 @@ Public Class FullTextBible
 
         For i As Integer = start To [end]
             For Each c As Condition In conditions
+                Dim res As New Result
+
                 If c.Type = "SIMPLE" Then
-                    c.Result = FuncSimple(i, c.Unit1)
+                    res = FuncSimple(i, c.Unit1)
+                ElseIf c.Type = "AND" Then
+
+                ElseIf c.Type = "OR" Then
+
+                ElseIf c.Type = "XOR" Then
+
+
+                ElseIf c.Type = "NOT" Then
+
                 Else
                     Try
                         Dim b As Boolean = c.Type = "WITHIN" Or c.Type = "PRECEDEDBY"
                         Dim f As Boolean = c.Type = "WITHIN" Or c.Type = "FOLLOWEDBY"
-                        c.Result = FuncProximity(i, c.Unit1, c.Unit2, CInt(c.Options(0)), f, b)
+                        res = FuncProximity(i, c.Unit1, c.Unit2, CInt(c.Options(0)), f, b)
                     Catch ex As Exception
                         Throw New Exception(String.Format("Invalid search syntax: {0} is not recognized or is in the wrong format.", c.Type))
                     End Try
                 End If
+
+                If res.Success Then
+                    If IsNothing(c.Result) Then
+                        c.Result = New Result
+                    End If
+                    If Not c.Result.Success Then
+                        c.Result.Success = res.Success
+                    End If
+                    c.Result.References.AddRange(res.References)
+                End If
+
             Next
 
-            If Search(conditions) Then
-                For Each c As Condition In conditions
+
+        Next
+
+        For x As Integer = 0 To conditions.Count - 1
+            If conditions(x).Type = "AND" Or conditions(x).Type = "OR" Or conditions(x).Type = "XOR" Or conditions(x).Type = "NOT" Then
+                If x > 0 AndAlso x < conditions.Count - 1 Then
+
+                    Dim y As Integer = 1
+                    Dim z As Integer = 1
+
+                    While conditions(x - y).Collated And (x - y) > 0
+                        y -= 1
+                    End While
+                    While conditions(x + z).Collated And (x + z) < conditions.Count
+                        z += 1
+                    End While
+
+                    Select Case conditions(x).Type
+                        Case "AND"
+                            If Evaluate.And(conditions(x - y), conditions(x + z)) Then
+                                conditions(x).Result = New Result
+                                conditions(x).Result.Success = True
+                                Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
+                                conditions(x).Result.References.AddRange(l)
+                                conditions(x - y).Result.References.Clear()
+                                conditions(x + z).Result.References.Clear()
+                                conditions(x - y).Collated = True
+                                conditions(x + z).Collated = True
+
+                            End If
+                        Case "OR"
+                            If conditions(x - 1).Result.Success OrElse conditions(x + 1).Result.Success Then
+                                conditions(x).Result = New Result
+                                conditions(x).Result.Success = True
+
+                                If conditions(x - 1).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x - 1).Result.References)
+                                End If
+                                If conditions(x + 1).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x + 1).Result.References)
+                                End If
+
+                                conditions(x - 1).Result.References.Clear()
+                                conditions(x + 1).Result.References.Clear()
+                            End If
+                        Case "XOR"
+                            If conditions(x - 1).Result.Success Xor conditions(x + 1).Result.Success Then
+                                conditions(x).Result = New Result
+                                conditions(x).Result.Success = True
+
+                                If conditions(x - 1).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x - 1).Result.References)
+                                End If
+                                If conditions(x + 1).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x + 1).Result.References)
+                                End If
+
+                                conditions(x - 1).Result.References.Clear()
+                                conditions(x + 1).Result.References.Clear()
+                            End If
+                        Case "NOT"
+                            If conditions(x - 1).Result.Success And Not conditions(x + 1).Result.Success Then
+                                conditions(x).Result = New Result
+                                conditions(x).Result.Success = True
+
+                                If conditions(x - 1).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x - 1).Result.References)
+                                End If
+                                If Not conditions(x + 1).Result.Success Then
+                                    conditions(x).Result.References.AddRange(conditions(x + 1).Result.References)
+                                End If
+
+                                conditions(x - 1).Result.References.Clear()
+                                conditions(x + 1).Result.References.Clear()
+                            End If
+                    End Select
+                End If
+            End If
+        Next
+
+        For Each c As Condition In conditions
+            If Not IsNothing(c.Result) Then
+                If c.Result.Success Then
                     refs.AddRange(c.Result.References)
-                Next
+                End If
             End If
         Next
 
@@ -350,21 +456,21 @@ Public Class FullTextBible
             End If
         End If
 
-            For i As Integer = 0 To conditions.Length - 1
-            Select Case conditions(i).Type.ToUpper
-                Case "AND"
-                    status = Evaluate.And(conditions(i - 1), conditions(i + 1))
-                Case "OR"
-                    status = Evaluate.Or(conditions(i - 1), conditions(i + 1))
-                Case "NOT"
-                    status = Evaluate.Not(conditions(i - 1), conditions(i + 1))
-                Case "XOR"
-                    status = Evaluate.Xor(conditions(i - 1), conditions(i + 1))
-            End Select
-            If Not status Then
-                Exit For
-            End If
-        Next
+        '    For i As Integer = 0 To conditions.Length - 1
+        '    Select Case conditions(i).Type.ToUpper
+        '        Case "AND"
+        '            status = Evaluate.And(conditions(i - 1), conditions(i + 1))
+        '        Case "OR"
+        '            status = Evaluate.Or(conditions(i - 1), conditions(i + 1))
+        '        Case "NOT"
+        '            status = Evaluate.Not(conditions(i - 1), conditions(i + 1))
+        '        Case "XOR"
+        '            status = Evaluate.Xor(conditions(i - 1), conditions(i + 1))
+        '    End Select
+        '    If Not status Then
+        '        Exit For
+        '    End If
+        'Next
 
         Return status
     End Function
@@ -489,8 +595,10 @@ Public Class FullTextBible
                     If (index - i) > 0 Then
                         Dim tmp As Result = FuncSimple(index - i, y)
                         If tmp.Success Then
-                            res.References.First.EndChapter = tmp.References.First.StartChapter
-                            res.References.First.EndVerse = tmp.References.First.StartVerse
+                            res.References.First.EndChapter = res.References.First.StartChapter
+                            res.References.First.EndVerse = res.References.First.StartVerse
+                            res.References.First.StartChapter = tmp.References.First.StartChapter
+                            res.References.First.StartVerse = tmp.References.First.StartVerse
                             found_b = True
                             Exit For
                         End If
