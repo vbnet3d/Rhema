@@ -128,7 +128,7 @@ Public Module BibleData
                             Dim tokens() As String = data(5).Split(CType(" ", Char()))
                             For Each t As String In tokens
                                 If t <> "" Then
-                                    If AscW(t(0)) >= 300 Then
+                                    If AscW(t(0)) >= 300 OrElse t(0) = "*" Then
                                         If entry.Word <> "" Then
                                             w.WriteLine(String.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}{0}{10}{0}{11}{0}{12}{0}{13}",
                                                                       separator, entry.Book,
