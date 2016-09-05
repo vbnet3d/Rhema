@@ -24,13 +24,13 @@ Partial Class frmMain
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.lblResults = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cmbBible = New System.Windows.Forms.ComboBox()
-        Me.GreekText1 = New Rhema.GreekText()
         Me.cmbStart = New System.Windows.Forms.ComboBox()
         Me.cmbEnd = New System.Windows.Forms.ComboBox()
+        Me.txtSearch = New Rhema.Viewer()
+        Me.GreekText1 = New Rhema.GreekText()
         Me.SuspendLayout()
         '
         'Button1
@@ -42,19 +42,6 @@ Partial Class frmMain
         Me.Button1.TabIndex = 7
         Me.Button1.Text = "Search"
         Me.Button1.UseVisualStyleBackColor = True
-        '
-        'txtSearch
-        '
-        Me.txtSearch.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtSearch.Font = New System.Drawing.Font("Times New Roman", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSearch.Location = New System.Drawing.Point(7, 65)
-        Me.txtSearch.Multiline = True
-        Me.txtSearch.Name = "txtSearch"
-        Me.txtSearch.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtSearch.Size = New System.Drawing.Size(561, 275)
-        Me.txtSearch.TabIndex = 8
         '
         'lblResults
         '
@@ -81,16 +68,6 @@ Partial Class frmMain
         Me.cmbBible.Size = New System.Drawing.Size(192, 21)
         Me.cmbBible.TabIndex = 12
         '
-        'GreekText1
-        '
-        Me.GreekText1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GreekText1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GreekText1.Location = New System.Drawing.Point(7, 33)
-        Me.GreekText1.Name = "GreekText1"
-        Me.GreekText1.Size = New System.Drawing.Size(480, 26)
-        Me.GreekText1.TabIndex = 6
-        '
         'cmbStart
         '
         Me.cmbStart.FormattingEnabled = True
@@ -107,18 +84,39 @@ Partial Class frmMain
         Me.cmbEnd.Size = New System.Drawing.Size(121, 21)
         Me.cmbEnd.TabIndex = 14
         '
+        'txtSearch
+        '
+        Me.txtSearch.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtSearch.Location = New System.Drawing.Point(8, 70)
+        Me.txtSearch.MinimumSize = New System.Drawing.Size(20, 20)
+        Me.txtSearch.Name = "txtSearch"
+        Me.txtSearch.Size = New System.Drawing.Size(559, 267)
+        Me.txtSearch.TabIndex = 15
+        '
+        'GreekText1
+        '
+        Me.GreekText1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GreekText1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GreekText1.Location = New System.Drawing.Point(7, 33)
+        Me.GreekText1.Name = "GreekText1"
+        Me.GreekText1.Size = New System.Drawing.Size(480, 26)
+        Me.GreekText1.TabIndex = 6
+        '
         'frmMain
         '
         Me.AcceptButton = Me.Button1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(580, 352)
+        Me.Controls.Add(Me.txtSearch)
         Me.Controls.Add(Me.cmbEnd)
         Me.Controls.Add(Me.cmbStart)
         Me.Controls.Add(Me.cmbBible)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lblResults)
-        Me.Controls.Add(Me.txtSearch)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.GreekText1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -130,10 +128,10 @@ Partial Class frmMain
     End Sub
     Friend WithEvents GreekText1 As Rhema.GreekText
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents lblResults As System.Windows.Forms.Label
     Friend WithEvents Label1 As Label
     Friend WithEvents cmbBible As ComboBox
     Friend WithEvents cmbStart As ComboBox
     Friend WithEvents cmbEnd As ComboBox
+    Friend WithEvents txtSearch As Viewer
 End Class

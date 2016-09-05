@@ -28,7 +28,7 @@ Partial Class frmBible
         Me.cmbVerse = New System.Windows.Forms.ComboBox()
         Me.cmbChap = New System.Windows.Forms.ComboBox()
         Me.cmbBook = New System.Windows.Forms.ComboBox()
-        Me.txt = New System.Windows.Forms.TextBox()
+        Me.txt = New Rhema.Viewer()
         Me.SuspendLayout()
         '
         'cmbBible
@@ -77,25 +77,23 @@ Partial Class frmBible
         Me.txt.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txt.Font = New System.Drawing.Font("Times New Roman", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txt.Location = New System.Drawing.Point(4, 63)
-        Me.txt.Multiline = True
+        Me.txt.Location = New System.Drawing.Point(4, 57)
+        Me.txt.MinimumSize = New System.Drawing.Size(20, 20)
         Me.txt.Name = "txt"
-        Me.txt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt.Size = New System.Drawing.Size(232, 289)
-        Me.txt.TabIndex = 13
+        Me.txt.Size = New System.Drawing.Size(232, 295)
+        Me.txt.TabIndex = 19
         '
         'frmBible
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(244, 364)
+        Me.Controls.Add(Me.txt)
         Me.Controls.Add(Me.cmbBible)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.cmbVerse)
         Me.Controls.Add(Me.cmbChap)
         Me.Controls.Add(Me.cmbBook)
-        Me.Controls.Add(Me.txt)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmBible"
         Me.Text = "Bible"
@@ -109,5 +107,5 @@ Partial Class frmBible
     Friend WithEvents cmbVerse As ComboBox
     Friend WithEvents cmbChap As ComboBox
     Friend WithEvents cmbBook As ComboBox
-    Friend WithEvents txt As TextBox
+    Friend WithEvents txt As Viewer
 End Class
