@@ -117,4 +117,38 @@ Public Class frmWindow
     Private Sub CascadeToolStripMenuItem_Click_1(sender As Object, e As EventArgs) Handles CascadeToolStripMenuItem.Click
         Me.LayoutMdi(MdiLayout.Cascade)
     End Sub
+
+
+    Private Sub UnboundBibleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UnboundBibleToolStripMenuItem.Click
+        If ofd.ShowDialog = DialogResult.OK Then
+            inputFile = ofd.FileName
+            outputFile = ofd.SafeFileName.Replace(".txt", "")
+            bibleFile = inputFile.Replace(outputFile, "book_names")
+            Dim t As New Threading.Thread(AddressOf ImportUB)
+            t.Start()
+        End If
+    End Sub
+
+    Private inputFile As String
+    Private outputFile As String
+    Private bibleFile As String
+    Private done As Boolean
+    Private Sub ImportUB()
+        done = False
+        BibleData.ConvertUnboundToRhema(inputFile, String.Format("./bibles/{0}.bible", outputFile), bibleFile)
+        done = True
+    End Sub
+
+    Private Sub frmWindow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+
+    Private Sub UI_Tick(sender As Object, e As EventArgs) Handles UI.Tick
+        'If Not done Then
+        '    lblStatus.Text = "Processing file."
+        'End If
+        If done Then
+            lblStatus.Text = "Finishing importing file."
+        End If
+    End Sub
 End Class
