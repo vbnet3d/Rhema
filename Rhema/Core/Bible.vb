@@ -1,5 +1,6 @@
 ﻿Option Explicit On
 Option Strict On
+Imports System.Text
 'The MIT License (MIT)
 
 'Copyright(c) 2016 David Dzimianski
@@ -39,6 +40,16 @@ End Class
 Public Class Verse
     Public Words As New List(Of word)
     Public Property Text As New System.Text.StringBuilder
+
+    Public ReadOnly Property HTML As String
+        Get
+            Dim t As New StringBuilder
+            For Each w As word In Words
+                t.AppendFormat("<span class=""word"" id=""{0}"">{1}</span> ", w.StrongsNumber.First, w._Text)
+            Next
+            Return t.ToString
+        End Get
+    End Property
     Public ReadOnly Property RawText As String
         Get
             Return Text.ToString

@@ -198,6 +198,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Embedded Data\jquery-1.12.4.min.js" />
+    <EmbeddedResource Include="Embedded Data\script.js" />
     <Content Include="scroll.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

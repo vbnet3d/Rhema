@@ -44,7 +44,7 @@ Public Class frmMain
         Dim l As List(Of Verse) = curBible.GetReference(curFtBible.Search(GreekText1.Text, cmbStart.SelectedIndex, cmbEnd.SelectedIndex).ToArray)
         Dim i As Integer
         For i = 0 To l.Count - 1
-            search.Append(l(i).Book & " " & (l(i).Chapter) & ":" & (l(i).Verse) & " " & l(i).RawText & vbCrLf)
+            search.Append(l(i).Book & " " & (l(i).Chapter) & ":" & (l(i).Verse) & " " & l(i).HTML & vbCrLf)
         Next
         txtSearch.Text = search.ToString()
 

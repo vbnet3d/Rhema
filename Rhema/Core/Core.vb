@@ -37,6 +37,8 @@ Public Module Core
     Public Bibles As New List(Of Bible)
     Public BibleList As New List(Of String)
     Public AutoCompleteList As New List(Of String)
+    Public Jquery As String
+    Public Scripts As String
     Public b As Book
     Public c As Chapter
     Dim _assembly As [Assembly]
@@ -63,6 +65,14 @@ Public Module Core
                     Bibles.Add(fb.ToBible)
                     ftBibles.Add(fb)
                     BibleList.Add(fb.Name)
+                End Using
+            ElseIf s.Contains(".js") AndAlso s.Contains("jquery") Then
+                Using _s = New StreamReader(_assembly.GetManifestResourceStream(s))
+                    Jquery = _s.ReadToEnd()
+                End Using
+            ElseIf s.Contains(".js") AndAlso s.Contains("script") Then
+                Using _s = New StreamReader(_assembly.GetManifestResourceStream(s))
+                    Scripts = _s.ReadToEnd()
                 End Using
             End If
         Next
