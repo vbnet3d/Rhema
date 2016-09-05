@@ -62,6 +62,8 @@ Public Class frmMain
 
 
         cmbStart.Items.Clear()
+        cmbEnd.Items.Clear()
+
         For Each b As String In curBible.BookList
             cmbStart.Items.Add(b)
             cmbEnd.Items.Add(b)
