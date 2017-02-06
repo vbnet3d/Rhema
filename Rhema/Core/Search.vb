@@ -68,6 +68,7 @@ End Module
 Public Class Result
     Public Success As Boolean = False
     Public References As New List(Of Reference)
+    Public MatchingPhrase As String
     Public Overrides Function ToString() As String
         Dim str As New StringBuilder()
 

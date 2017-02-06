@@ -1,4 +1,6 @@
-﻿'The MIT License (MIT)
+﻿Option Explicit On
+Option Strict On
+'The MIT License (MIT)
 
 'Copyright(c) 2016 David Dzimianski
 
@@ -20,8 +22,7 @@
 'OUT OF Or IN CONNECTION WITH THE SOFTWARE Or THE USE Or OTHER DEALINGS IN THE
 'SOFTWARE.
 
-Option Explicit On
-Option Strict On
+Imports System.Text.RegularExpressions
 
 Public Class frmMain
     Public Property curBible As Bible
@@ -46,7 +47,15 @@ Public Class frmMain
         For i = 0 To l.Count - 1
             search.Append(l(i).Book & " " & (l(i).Chapter) & ":" & (l(i).Verse) & " " & l(i).HTML & vbCrLf)
         Next
+
         txtSearch.Text = search.ToString()
+
+        For Each s As String In curFtBible.MatchList
+            Dim regexString As String = "<span[ \=a-zA-Z\""0-9]*>" & s.Replace(" ", "</span> <span[ \=a-zA-Z\""0-9]*>") & "</span>"
+
+            Dim replaceValue As String = Regex.Match(txtSearch.Text, regexString, RegexOptions.Compiled).Value
+            txtSearch.Text = txtSearch.Text.Replace(replaceValue, "<strong style=""color: red;"">" & replaceValue & "</strong>")
+        Next
 
         Me.Text = String.Format("Search - {0} : {1} Result(s)", GreekText1.Text, l.Count)
 

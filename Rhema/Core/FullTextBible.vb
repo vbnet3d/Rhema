@@ -32,6 +32,8 @@ Public Class FullTextBible
     Private Code As String
     Private infoList As New List(Of Info)
 
+    Public MatchList As New List(Of String)
+
     '****************************
     'REGEX Pattern Definitions
     '****************************
@@ -249,6 +251,8 @@ Public Class FullTextBible
     Public Function Search(s As String, start As Integer, [end] As Integer) As List(Of Reference)
         Dim refs As New List(Of Reference)
 
+        Me.MatchList.Clear()
+
         start = Me.BookIndex(start)
         If [end] = Me.BookIndex.Last.Key Then
             [end] = Me.Text.Count - 1
@@ -293,6 +297,7 @@ Public Class FullTextBible
                         c.Result.Success = res.Success
                     End If
                     c.Result.References.AddRange(res.References)
+                    Me.MatchList.Add(res.MatchingPhrase)
                 End If
 
             Next
@@ -344,9 +349,9 @@ Public Class FullTextBible
 
                         Case "XOR"
                             conditions(x).Result = New Result
-                                conditions(x).Result.Success = True
+                            conditions(x).Result.Success = True
 
-                                Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
+                            Dim l As List(Of Reference) = conditions(x - y).Result.References.Intersect(conditions(x + z).Result.References, New ReferenceEqualityComparer).ToList
 
                             conditions(x).Result.References.AddRange(conditions(x - y).Result.References)
                             conditions(x).Result.References.AddRange(conditions(x + z).Result.References)
@@ -354,13 +359,13 @@ Public Class FullTextBible
                             conditions(x).Result.References = conditions(x).Result.References.Distinct(New ReferenceEqualityComparer).ToList()
 
                             For Each r As Reference In l
-                                    conditions(x).Result.References.Remove(r)
-                                Next
+                                conditions(x).Result.References.Remove(r)
+                            Next
 
-                                conditions(x - y).Result.References.Clear()
-                                conditions(x + z).Result.References.Clear()
-                                conditions(x - y).Collated = True
-                                conditions(x + z).Collated = True
+                            conditions(x - y).Result.References.Clear()
+                            conditions(x + z).Result.References.Clear()
+                            conditions(x - y).Collated = True
+                            conditions(x + z).Collated = True
 
                         Case "NOT"
                             conditions(x).Result = New Result
@@ -527,6 +532,7 @@ Public Class FullTextBible
         Dim ids As New Dictionary(Of Integer, Parsing)
 
         If Match(u.Tokens.First, Me.Text(index), CType(IIf(ids.Count > 0, ids, Nothing), Dictionary(Of Integer, Parsing))) Then
+            Dim matchWord As String = Me.Text(index)._Text
             found = True
             Dim p As PartOfSpeech = u.Tokens.First.PartOfSpeech
             If Not ids.ContainsKey(p.Id) Then
@@ -562,12 +568,15 @@ Public Class FullTextBible
                             End If
                         Else
                             refs.AddRange(Me.Text(index + wordIndex).Chapter, Me.Text(index + wordIndex).Verse)
+                            matchWord &= " " & Me.Text(index + wordIndex)._Text
                         End If
                         wordIndex += 1
                     End If
 
                 End If
             Next
+
+            res.MatchingPhrase = matchWord
         End If
 
         If found Then
